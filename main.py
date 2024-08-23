@@ -3,10 +3,11 @@ import os
 import numpy as np
 # import guitarpro
 from preprocess import readgpro, guitarinfo
-from encoding import getencoding
+from encoding import getencodingnotes, getencodingbeats
 
 if __name__ == '__main__':
-    training_data = np.zeros((20, 10))
+    training_data_notes = np.zeros((20, 10))
+    training_data_beats = np.zeros((20, 10))
     GPROFOLDER = './gprofiles/'
     j = 0
     k = 0
@@ -30,8 +31,11 @@ if __name__ == '__main__':
                             for note in beat.notes:
                                 # note.value = encoding.MAPPING_NOTE.get(note.value, note.value)
                                 # print(note.value, note.string, note.beat.duration.value)
-                                training_data[k][L] = getencoding(note.value, note.string, tuning)
+                                training_data_notes[k][L] = getencodingnotes(note.value,
+                                                                            note.string,
+                                                                            tuning)
+                                training_data_beats[k][L] = getencodingbeats(note.beat.duration)
                                 L += 1
                     k += 1
 
-print(training_data)
+print(training_data_beats)
