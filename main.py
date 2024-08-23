@@ -6,8 +6,8 @@ from preprocess import readgpro, guitarinfo
 from encoding import getencodingnotes, getencodingbeats
 
 if __name__ == '__main__':
-    training_data_notes = np.zeros((20, 10))
-    training_data_beats = np.zeros((20, 10))
+    training_data_notes = np.zeros((7, 10))
+    training_data_beats = np.zeros((7, 10))
     GPROFOLDER = './gprofiles/'
     j = 0
     k = 0
@@ -19,7 +19,6 @@ if __name__ == '__main__':
             print(f"File: {file_path}")
             song = readgpro(str(file_path))
             tuning = guitarinfo(song)
-            print("Note Duration")
 
             L = 0
             for track in song.tracks:
@@ -38,4 +37,7 @@ if __name__ == '__main__':
                                 L += 1
                     k += 1
 
+print("Notes")
+print(training_data_notes)
+print("Beats")
 print(training_data_beats)
