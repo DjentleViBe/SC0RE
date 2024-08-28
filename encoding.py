@@ -23,7 +23,10 @@ MAPPING_BEAT = {
 
 def getencodingnotes(note, string, tuning):
     """gives a unique number to note"""
-    encoding = tuning[string - 1] + note
+    # total notes = 132
+    # String 1 : 0 - 22
+    # String 2 : (0 - 22) + (2 - 1) * 22
+    encoding = (string - 1) * 22 + note
     return encoding
 
 def getencodingbeats(duration):
