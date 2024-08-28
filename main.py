@@ -3,13 +3,14 @@ import os
 import numpy as np
 # import guitarpro
 import torch
-from preprocess import readgpro, guitarinfo
+import torch.nn as nn
+from preprocess import readgpro, guitarinfo, get_positional_encoding
 from encoding import getencodingnotes, getencodingbeats
 from _encoder.encoder import EncoderAPE
 
 if __name__ == '__main__':
-    training_src_notes = np.zeros((5, 10), dtype = 'float32')
-    training_data_beats = np.zeros((5, 10), dtype = 'float32')
+    training_src_notes = np.zeros((5, 10), dtype = 'int32')
+    training_data_beats = np.zeros((5, 10), dtype = 'int32')
     GPROFOLDER = './gprofiles/'
     j = 0
     k = 0
@@ -39,10 +40,10 @@ if __name__ == '__main__':
                                 L += 1
                     k += 1
 
-    training_src_notes = training_src_notes.reshape(5, 10, 1)
+    # training_src_notes = training_src_notes.reshape(5, 10, 1)
     training_tgt_notes = training_src_notes.copy()
     print("Notes")
-    training_src_notes[:,4,:] = 0
+    training_src_notes[:,4] = 0
     print(training_src_notes)
     #print("Beats")
     #print(training_data_beats)
@@ -57,7 +58,7 @@ if __name__ == '__main__':
     
     ################################ transformers #################################
     ########## Params ##############
-    d_model         =   10
+    d_model         =   512
     ffn_hidden      =   1024
     max_seq_length  =   7
     num_heads       =   4
@@ -79,10 +80,21 @@ if __name__ == '__main__':
     mask = torch.triu(mask, diagonal = 1).to(device)
 
     with torch.set_grad_enabled(True):
-        src = torch.from_numpy(training_src_notes).to(device)
-        target = torch.from_numpy(training_tgt_notes).to(device)
+        vocab_size = 132
+        embedding_dim = d_model
+        embedding_layer = nn.Embedding(num_embeddings = vocab_size, embedding_dim = embedding_dim).to(device)
+        token_ids = torch.tensor(training_src_notes).to(device)
+        
+        embeddings = embedding_layer(token_ids)
+        pos_enc = get_positional_encoding(10, d_model).to(device)
 
-        prediction_val = encoder(src).to(device)
+        input_embeddings = embeddings + pos_enc
+
+        
+        # src = torch.from_numpy(training_src_notes).to(device)
+        # target = torch.from_numpy(training_tgt_notes).to(device)
+
+        prediction_val = encoder(input_embeddings).to(device)
         loss = criterion(target, prediction_val)
         loss.backward()
 
