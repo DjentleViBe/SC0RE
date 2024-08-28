@@ -3,7 +3,7 @@ import os
 import numpy as np
 # import guitarpro
 import torch
-import torch.nn as nn
+from torch import nn
 from preprocess import readgpro, guitarinfo, get_positional_encoding
 from encoding import getencodingnotes, getencodingbeats
 from _encoder.encoder import EncoderAPE
@@ -48,49 +48,49 @@ if __name__ == '__main__':
     #print("Beats")
     #print(training_data_beats)
 
-    
+
     #training_src_notes[:,4] = 0
     # shifted_arr[:, 1:] = training_src_notes[:, :-1]
 
     #print("target")
     #print(training_tgt_notes)
 
-    
+
     ################################ transformers #################################
     ########## Params ##############
-    d_model         =   512
-    ffn_hidden      =   1024
-    max_seq_length  =   7
-    num_heads       =   4
-    drop_prob       =   0.1
-    num_layers      =   1
-    learning_rate   =   0.1
-    patch           =   2
-    stride          =   2
+    D_MODEL         =   512
+    VOCAL_SIZE      =   132
+    FFN_HIDDEN      =   1024
+    MAX_SEQ_LENGTH  =   10
+    NUM_HEADS       =   4
+    DROP_PROB       =   0.1
+    NUM_LAYERS      =   1
+    LEARNING_RATE   =   0.1
+    PATCH           =   2
+    STRIDE          =   2
     ################################
     device = torch.device("mps")
     criterion = torch.nn.MSELoss()
-    encoder = EncoderAPE(device, d_model, ffn_hidden, max_seq_length, num_heads, drop_prob, num_layers)
-    optimizer = torch.optim.AdamW(encoder.parameters(), lr = learning_rate)
+    encoder = EncoderAPE(device, D_MODEL, FFN_HIDDEN, MAX_SEQ_LENGTH, NUM_HEADS,
+                         DROP_PROB, NUM_LAYERS)
+    optimizer = torch.optim.AdamW(encoder.parameters(), lr = LEARNING_RATE)
 
     encoder.train()
 
-    num_patch = ((max_seq_length - patch)//stride) + 1
-    mask = torch.full([num_patch, num_patch], float('-inf'))
+    NUM_PATCH = ((MAX_SEQ_LENGTH - PATCH)//STRIDE) + 1
+    mask = torch.full([NUM_PATCH, NUM_PATCH], float('-inf'))
     mask = torch.triu(mask, diagonal = 1).to(device)
 
     with torch.set_grad_enabled(True):
-        vocab_size = 132
-        embedding_dim = d_model
-        embedding_layer = nn.Embedding(num_embeddings = vocab_size, embedding_dim = embedding_dim).to(device)
+        embedding_layer = nn.Embedding(num_embeddings = VOCAL_SIZE,
+                                       embedding_dim = D_MODEL).to(device)
         token_ids = torch.tensor(training_src_notes).to(device)
-        
+
         embeddings = embedding_layer(token_ids)
-        pos_enc = get_positional_encoding(10, d_model).to(device)
+        pos_enc = get_positional_encoding(10, D_MODEL).to(device)
 
         input_embeddings = embeddings + pos_enc
 
-        
         # src = torch.from_numpy(training_src_notes).to(device)
         # target = torch.from_numpy(training_tgt_notes).to(device)
 
@@ -100,9 +100,3 @@ if __name__ == '__main__':
 
         optimizer.step()
         optimizer.zero_grad()
-
-
-
-
-
-
