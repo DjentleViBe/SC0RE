@@ -1,4 +1,5 @@
 """Preprocess data required for training"""
+import os
 import guitarpro
 import torch
 import numpy as np
@@ -36,3 +37,12 @@ def get_positional_encoding(seq_len, d_model):
             positional_encoding[pos, i + 1] = np.cos(pos / (10000 ** ((2 * i)/d_model)))
 
     return torch.tensor(positional_encoding, dtype=torch.float32)
+
+def create_dir(directory_path):
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
+        print(f"Directory '{directory_path}' created.")
+    else:
+        print(f"Directory '{directory_path}' already exists.")
+    
+    return 0

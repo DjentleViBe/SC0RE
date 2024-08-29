@@ -3,22 +3,20 @@
 # C0 = 0 in GPro
 
 MAPPING_BEAT = {
+    # pure : base, triplet, quintuplet, sextuplet, septuplet, 9 tuplets, 11-tuplets (1-7)
+    # dotted : base, triplet, quintuplet, sextuplet, septuplet, 9 tuplets, 11-tuplets (8-13)
+    # full
+    1  : 64,
+    # half
+    2  : 51, 
     # quarter
-    4  :  11,
-    5  :  12,
-    6  :  9,
+    4  : 38,
     # 8th
-    8  :  8,
-    9  :  10,
-    10 :  6,
+    8  : 25,
     # 16th
-    16 :  5,
-    17 :  7,
-    18 :  4,
+    16 : 14,
     # 32nd
-    32 :  2,
-    33 :  3,
-    34 :  1,
+    32 : 1  # 1,2,3,4,5,6,7,8,9,10,12,13
 }
 
 def getencodingnotes(note, string, tuning):
@@ -43,10 +41,21 @@ def getencodingbeats(duration):
     # 10 : Dotted-8th
     # 11 : Quarter
     # 12 : Dotted-Quarter
-
-    if duration.isDotted:
-        duration.value += 1
-    if duration.tuplet.enters == 3:
-        duration.value += 2
+    # 0 - 132   : # 1
+    # 133 - 265 : # 2
     beatvalue = MAPPING_BEAT.get(duration.value)
+    if duration.tuplet.enters == 3:
+        beatvalue += 1
+    if duration.tuplet.enters == 5:
+        beatvalue += 2
+    if duration.tuplet.enters == 6:
+        beatvalue += 3
+    if duration.tuplet.enters == 7:
+        beatvalue += 4
+    if duration.tuplet.enters == 9:
+        beatvalue += 5
+    if duration.tuplet.enters == 11:
+        beatvalue += 6
+    if duration.isDotted:
+        beatvalue += 8
     return beatvalue

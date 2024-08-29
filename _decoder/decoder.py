@@ -20,7 +20,7 @@ class DecoderLayerAPE(nn.Module):
         self.linear_layer = nn.Linear(d_model, d_model)
         self.vocab_layer = nn.Linear(d_model, d_vocab)
 
-    def forward(self, x_val, y_val, decoder_mask):
+    def forward(self, y_val, decoder_mask):
         """Forward prop
         """
         _y = y_val.clone()
@@ -43,9 +43,9 @@ class SequentialDecoder(nn.Sequential):
     def forward(self, *inputs):
         """forward pass for custom seq decoder
         """
-        xseq, yseq, mask = inputs
+        yseq, mask = inputs
         for module in self._modules.values():
-            yseq = module(xseq, yseq, mask)
+            yseq = module(yseq, mask)
         return yseq
 
 class DecoderAPE(nn.Module):
@@ -56,8 +56,8 @@ class DecoderAPE(nn.Module):
         self.layers = SequentialDecoder(*[DecoderLayerAPE(device, d_model, d_vocab, seq_length,ffn_hidden,num_heads,drop_prob)\
                                       for _ in range(num_layers)])
 
-    def forward(self, x_val, y_val, decoder_mask):
+    def forward(self, y_val, decoder_mask):
         """Forward layer
         """
-        x_val = self.layers(x_val, y_val, decoder_mask)
+        x_val = self.layers(y_val, decoder_mask)
         return x_val
