@@ -16,24 +16,25 @@ if __name__ == '__main__':
     MODE            =   2  # 0: train, # 1 : eval, # 2 : both
     BACKUP          =   "dec_only_notes_3"
     DEVICE_TYPE     =   "cuda"
+    START_ID        =   80
     ########## Params ##############
-    EPOCHS          =   2000
+    EPOCHS          =   1000
     VOCAB_SIZE      =   180
     FFN_HIDDEN      =   768
-    MAX_SEQ_LENGTH  =   20
+    MAX_SEQ_LENGTH  =   25
     NUM_HEADS       =   12
     DROP_PROB       =   0.1
     NUM_LAYERS      =   12
-    D_MODEL         =   120
-    LEARNING_RATE   =   0.1
+    D_MODEL         =   60
+    LEARNING_RATE   =   0.2
     PATCH           =   1
     STRIDE          =   1
     TRAINING        =   ["CB"]
-    BATCH           =   530
+    BATCH           =   424
 
-    EOS             =   157
-    BOS             =   158
-    BARRE_NOTE      =   159
+    EOS             =   179
+    BOS             =   178
+    BARRE_NOTE      =   177
     ################################
     NUM_PATCH = ((MAX_SEQ_LENGTH - PATCH)//STRIDE) + 1
     device = torch.device(DEVICE_TYPE)
@@ -158,7 +159,7 @@ if __name__ == '__main__':
         decoder.eval()
         dummy_np = np.full((1, MAX_SEQ_LENGTH), EOS, dtype = 'int32')
         dummy_np[0, 0] = BOS
-        dummy_np[0, 1] = 82
+        dummy_np[0, 1] = START_ID
         dummy_in = torch.tensor(dummy_np).to(device)
         decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask, MAX_SEQ_LENGTH)
 
