@@ -15,10 +15,11 @@ if __name__ == '__main__':
     ################################ transformers #################################
     MODE            =   2  # 0: train, # 1 : eval, # 2 : both
     BACKUP          =   "dec_only_notes_2"
+    DEVICE_TYPE     =   "cuda"
     ########## Params ##############
     EPOCHS          =   2000
     D_MODEL         =   512
-    VOCAB_SIZE      =   132
+    VOCAB_SIZE      =   160
     FFN_HIDDEN      =   1024
     MAX_SEQ_LENGTH  =   20
     NUM_HEADS       =   4
@@ -28,14 +29,14 @@ if __name__ == '__main__':
     PATCH           =   1
     STRIDE          =   1
     TRAINING        =   ["CB"]
-    BATCH           =   250
+    BATCH           =   530
 
-    EOS             =   50257
-    BOS             =   50256
-    BARRE_NOTE      =   50258
+    EOS             =   157
+    BOS             =   158
+    BARRE_NOTE      =   159
     ################################
     NUM_PATCH = ((MAX_SEQ_LENGTH - PATCH)//STRIDE) + 1
-    device = torch.device("mps")
+    device = torch.device(DEVICE_TYPE)
     decoder = DecoderAPE(device, D_MODEL, VOCAB_SIZE, FFN_HIDDEN, MAX_SEQ_LENGTH, NUM_HEADS,
                             DROP_PROB, NUM_LAYERS).to(device)
     optimizer = torch.optim.AdamW(decoder.parameters(), lr = LEARNING_RATE)
@@ -49,6 +50,7 @@ if __name__ == '__main__':
         # training_src_notes = np.zeros((BATCH, MAX_SEQ_LENGTH), dtype = 'int32')
         training_src_notes = np.zeros((BATCH * MAX_SEQ_LENGTH), dtype = 'int32')
         training_data_beats = np.zeros((BATCH * MAX_SEQ_LENGTH), dtype = 'int32')
+        
         GPROFOLDER = './gprofiles/'
         j = 0
         k = 0
@@ -90,7 +92,7 @@ if __name__ == '__main__':
                         k += 1
 
         training_src_notes = training_src_notes.reshape(BATCH, MAX_SEQ_LENGTH)
-        training_tgt_notes = training_src_notes.copy()
+        training_tgt_notes = training_src_notes.copy().astype(np.int64)
         # print("Notes")
         # training_src_notes[:,4] = 0
         print("Source")
@@ -111,7 +113,7 @@ if __name__ == '__main__':
         # src = torch.from_numpy(training_src_notes).to(device)
         target = torch.from_numpy(training_tgt_notes).to(device)
         # prediction_val = encoder(input_embeddings).to(device)
-
+        
         while iteration <= EPOCHS:
             decoder.train()
 
