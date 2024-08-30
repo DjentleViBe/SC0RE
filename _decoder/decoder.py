@@ -17,8 +17,7 @@ class DecoderLayerAPE(nn.Module):
         self.ffn = PositionwiseFeedForward(device, d_model, ffn_hidden, drop_prob)
         self.layer_norm3 = LayerNormalization(device, parameters_shape=[d_model])
         self.dropout3 = nn.Dropout(p=drop_prob)
-        self.linear_layer = nn.Linear(d_model, d_model)
-        self.vocab_layer = nn.Linear(d_model, d_vocab)
+        
 
     def forward(self, y_val, decoder_mask):
         """Forward prop
@@ -33,8 +32,7 @@ class DecoderLayerAPE(nn.Module):
         y_val = self.ffn(y_val)
         y_val = self.dropout3(y_val)
         y_val = self.layer_norm3(y_val + _y)
-        y_val = self.linear_layer(y_val)
-        y_val = self.vocab_layer(y_val)
+        
         return y_val
 
 class SequentialDecoder(nn.Sequential):
@@ -55,9 +53,11 @@ class DecoderAPE(nn.Module):
         super().__init__()
         self.layers = SequentialDecoder(*[DecoderLayerAPE(device, d_model, d_vocab, seq_length,ffn_hidden,num_heads,drop_prob)\
                                       for _ in range(num_layers)])
+        self.linear_layer = nn.Linear(d_model, d_vocab)
 
     def forward(self, y_val, decoder_mask):
         """Forward layer
         """
         x_val = self.layers(y_val, decoder_mask)
+        x_val = self.linear_layer(x_val)
         return x_val

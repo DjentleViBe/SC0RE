@@ -14,18 +14,18 @@ if __name__ == '__main__':
     create_dir('./RESULTS/')
     ################################ transformers #################################
     MODE            =   2  # 0: train, # 1 : eval, # 2 : both
-    BACKUP          =   "dec_only_notes_2"
+    BACKUP          =   "dec_only_notes_3"
     DEVICE_TYPE     =   "cuda"
     ########## Params ##############
     EPOCHS          =   2000
-    D_MODEL         =   512
-    VOCAB_SIZE      =   160
-    FFN_HIDDEN      =   1024
+    VOCAB_SIZE      =   180
+    FFN_HIDDEN      =   768
     MAX_SEQ_LENGTH  =   20
-    NUM_HEADS       =   4
+    NUM_HEADS       =   12
     DROP_PROB       =   0.1
-    NUM_LAYERS      =   1
-    LEARNING_RATE   =   0.05
+    NUM_LAYERS      =   12
+    D_MODEL         =   120
+    LEARNING_RATE   =   0.1
     PATCH           =   1
     STRIDE          =   1
     TRAINING        =   ["CB"]
