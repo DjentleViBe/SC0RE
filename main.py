@@ -1,5 +1,6 @@
 """Training riffs using ML"""
 import os
+import sys
 import numpy as np
 # import guitarpro
 import torch
@@ -9,24 +10,25 @@ from postprocess import plot, decoder_inference
 from encoding import getencodingnotes, getencodingbeats
 # from _encoder.encoder import EncoderAPE
 from _decoder.decoder import DecoderAPE
+np.set_printoptions(threshold=sys.maxsize)
 
 if __name__ == '__main__':
     create_dir('./RESULTS/')
     ################################ transformers #################################
-    MODE            =   2  # 0: train, # 1 : eval, # 2 : both
+    MODE            =   1  # 0: train, # 1 : eval, # 2 : both
     BACKUP          =   "dec_only_notes_3"
     DEVICE_TYPE     =   "cuda"
-    START_ID        =   80
+    START_ID        =   82
     ########## Params ##############
     EPOCHS          =   1000
     VOCAB_SIZE      =   180
-    FFN_HIDDEN      =   768
+    FFN_HIDDEN      =   1024
     MAX_SEQ_LENGTH  =   25
-    NUM_HEADS       =   12
-    DROP_PROB       =   0.1
-    NUM_LAYERS      =   12
+    NUM_HEADS       =   2
+    DROP_PROB       =   0.3
+    NUM_LAYERS      =   2
     D_MODEL         =   60
-    LEARNING_RATE   =   0.2
+    LEARNING_RATE   =   0.01
     PATCH           =   1
     STRIDE          =   1
     TRAINING        =   ["CB"]
