@@ -13,22 +13,22 @@ from _decoder.decoder import DecoderAPE
 if __name__ == '__main__':
     create_dir('./RESULTS/')
     ################################ transformers #################################
-    MODE            =   1  # 0: train, # 1 : eval, # 2 : both
-    BACKUP          =   "dec_only_notes"
+    MODE            =   2  # 0: train, # 1 : eval, # 2 : both
+    BACKUP          =   "dec_only_notes_2"
     ########## Params ##############
-    EPOCHS          =   1000
+    EPOCHS          =   2000
     D_MODEL         =   512
     VOCAB_SIZE      =   132
     FFN_HIDDEN      =   1024
-    MAX_SEQ_LENGTH  =   5
+    MAX_SEQ_LENGTH  =   20
     NUM_HEADS       =   4
     DROP_PROB       =   0.1
     NUM_LAYERS      =   1
-    LEARNING_RATE   =   0.1
+    LEARNING_RATE   =   0.05
     PATCH           =   1
     STRIDE          =   1
     TRAINING        =   ["CB"]
-    BATCH           =   500
+    BATCH           =   250
 
     EOS             =   50257
     BOS             =   50256
@@ -145,7 +145,7 @@ if __name__ == '__main__':
         'loss': loss     # Optionally save the loss value
         }
         torch.save(checkpoint, './RESULTS/'+ BACKUP +'.pth')
-        plot(lossplot, './RESULTS/lossplot.png')
+        plot(lossplot, './RESULTS/' + BACKUP + '.png')
 
     if(MODE == 1 or MODE == 2):
         checkpoint = torch.load('./RESULTS/'+ BACKUP +'.pth')
@@ -154,7 +154,10 @@ if __name__ == '__main__':
         print('Loss : ', checkpoint['loss'].item())
         print('Epochs : ', checkpoint['epoch'])
         decoder.eval()
-        dummy_in = torch.tensor(np.array([[BOS, 70, EOS, EOS, EOS]], dtype = 'int32')).to(device)
+        dummy_np = np.full((1, MAX_SEQ_LENGTH), EOS, dtype = 'int32')
+        dummy_np[0, 0] = BOS
+        dummy_np[0, 1] = 82
+        dummy_in = torch.tensor(dummy_np).to(device)
         decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask, MAX_SEQ_LENGTH)
 
 

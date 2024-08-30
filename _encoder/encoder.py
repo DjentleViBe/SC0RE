@@ -39,6 +39,8 @@ class MultiHeadAttentionAPE(nn.Module):
         self.seq_length = seq_length
         self.qkv_layer = nn.Linear(d_model, 3 * d_model)   # 512 x 1536
         self.qkv_layer.to(device)
+        self.linear_layer = nn.Linear(d_model, d_model)
+        self.linear_layer.to(device)
 
     def forward(self, x_val, mask=None):
         """Forward layer
@@ -59,7 +61,7 @@ class MultiHeadAttentionAPE(nn.Module):
         # 30 x 10 x 32
         values = values.reshape(batch_size, sequence_length, self.num_heads * self.head_dim)
         # 30 x 10 x 1
-        # out = self.linear_layer(values)
+        values = self.linear_layer(values)
         return values
 
 class LayerNormalization(nn.Module):
