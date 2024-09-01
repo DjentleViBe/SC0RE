@@ -6,6 +6,10 @@ Riff generation using various Transformers Architecture
 - python > 3.11
 - pip
 
+### Installation
+Use virtual environment if possible <br>
+`pip install -r requirements.txt`
+
 ## Running
 ### Training
 1. Put training files inside `gprofiles/{MUSIC_STYLE}`
