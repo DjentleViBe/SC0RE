@@ -17,7 +17,6 @@ if __name__ == '__main__':
     ################################ transformers #################################
     MODE            =   1  # 0: train, # 1 : eval, # 2 : both
     BACKUP          =   "dec_only_notes_3"
-    DEVICE_TYPE     =   "cuda"
     START_ID        =   82
     ########## Params ##############
     EPOCHS          =   1000
@@ -34,9 +33,13 @@ if __name__ == '__main__':
     TRAINING        =   ["CB"]
     BATCH           =   424
 
-    EOS             =   179
-    BOS             =   178
-    BARRE_NOTE      =   177
+    EOS             =   26405
+    BOS             =   26406
+    BARRE_NOTE      =   26407
+    if(os.name == 'posix'):
+        DEVICE_TYPE     =   "mps"
+    else:
+        DEVICE_TYPE     =   "cuda"
     ################################
     NUM_PATCH = ((MAX_SEQ_LENGTH - PATCH)//STRIDE) + 1
     device = torch.device(DEVICE_TYPE)
