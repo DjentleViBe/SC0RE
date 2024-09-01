@@ -16,7 +16,7 @@ def plot(lossplot, filename):
 
 def decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask, seq_lim):
     """Transformer Decoder"""
-    for e in range (2, seq_lim):
+    for e_val in range (2, seq_lim):
         embeddings = embedding_layer(dummy_in)
         output_eval = decoder(embeddings + pos_enc, mask)
 
@@ -27,6 +27,6 @@ def decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask, seq_lim
         next_token = torch.argmax(probabilities, dim=-1).unsqueeze(0)
 
         # generated_sequence = dummy_in
-        dummy_in[0][e] = next_token
+        dummy_in[0][e_val] = next_token
     print(dummy_in)
     return dummy_in
