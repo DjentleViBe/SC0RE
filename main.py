@@ -17,10 +17,10 @@ if __name__ == '__main__':
     ################################ transformers #################################
     MODE            =   0  # 0: train, # 1 : eval, # 2 : both
     BACKUP          =   "dec_only_notes_3"
-    START_ID        =   82
+    START_ID        =   9592
     ########## Params ##############
     EPOCHS          =   1000
-    VOCAB_SIZE      =   180
+    VOCAB_SIZE      =   26412
     FFN_HIDDEN      =   1024
     MAX_SEQ_LENGTH  =   25
     NUM_HEADS       =   2
