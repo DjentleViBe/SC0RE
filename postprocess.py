@@ -1,8 +1,7 @@
+"""Post processing"""
 import matplotlib.pyplot as plt
-import numpy as np
 import torch
 import torch.nn.functional as F
-from preprocess import get_positional_encoding
 
 def plot(lossplot, filename):
     "Plots data and saves figure"
@@ -16,7 +15,7 @@ def plot(lossplot, filename):
     return 0
 
 def decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask, seq_lim):
-    device = torch.device("mps")
+    """Transformer Decoder"""
     for e in range (2, seq_lim):
         embeddings = embedding_layer(dummy_in)
         output_eval = decoder(embeddings + pos_enc, mask)

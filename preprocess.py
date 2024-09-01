@@ -39,10 +39,11 @@ def get_positional_encoding(seq_len, d_model):
     return torch.tensor(positional_encoding, dtype=torch.float32)
 
 def create_dir(directory_path):
+    """Create directory if it does not exist"""
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
         print(f"Directory '{directory_path}' created.")
     else:
         print(f"Directory '{directory_path}' already exists.")
-    
+
     return 0
