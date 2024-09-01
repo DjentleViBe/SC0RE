@@ -16,7 +16,7 @@ if __name__ == '__main__':
     create_dir('./RESULTS/')
     ################################ transformers #################################
     MODE            =   0  # 0: train, # 1 : eval, # 2 : both
-    BACKUP          =   "dec_only_notes_3"
+    BACKUP          =   "dec_only_notes_4"
     START_ID        =   9592
     ########## Params ##############
     EPOCHS          =   1000
