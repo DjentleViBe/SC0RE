@@ -30,3 +30,4 @@ def decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask, seq_lim
         # generated_sequence = dummy_in
         dummy_in[0][e] = next_token
     print(dummy_in)
+    return dummy_in
