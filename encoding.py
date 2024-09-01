@@ -19,7 +19,7 @@ MAPPING_BEAT = {
     32 : 1  # 1,2,3,4,5,6,7,8,9,10,11,12,13,14
 }
 
-def tokenizer_1(note, string, duration, n):
+def tokenizer_1(note, string, duration, n_val):
     """Tokenizer type 1"""
     # 7 strings, 23 notes per string, + Palm_Mute
     # 161 * 2 total notes / beat
@@ -31,7 +31,7 @@ def tokenizer_1(note, string, duration, n):
     # 323 - 644 = triplet
     # .....
     # Unique combination formula = Note formula + (m * 322), m = mapping_beat number
-    note_formula = (note + 1) + (string - 1) * 23 + (7 * 23) * (n - 1)
+    note_formula = (note + 1) + (string - 1) * 23 + (7 * 23) * (n_val - 1)
     beatvalue = MAPPING_BEAT.get(duration.value)
     if duration.tuplet.enters == 3:
         beatvalue += 1
