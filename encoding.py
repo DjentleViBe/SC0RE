@@ -58,7 +58,7 @@ def getencodingbeats(duration):
         beatvalue += 8
     return beatvalue
 
-def encoder_1(note, string, duration, n):
+def tokenizer_1(note, string, duration, n):
     # 7 strings, 23 notes per string, + Palm_Mute
     # 161 * 2 total notes / beat
     # Note formula = n * 23 * String + note, n = 2 if Palm_Mute, else n = 1

@@ -7,7 +7,7 @@ import torch
 from torch import nn
 from preprocess import readgpro, guitarinfo, get_positional_encoding, create_dir
 from postprocess import plot, decoder_inference
-from encoding import getencodingnotes, getencodingbeats, encoder_1
+from encoding import getencodingnotes, getencodingbeats, tokenizer_1
 # from _encoder.encoder import EncoderAPE
 from _decoder.decoder import DecoderAPE
 np.set_printoptions(threshold=sys.maxsize)
@@ -53,10 +53,7 @@ if __name__ == '__main__':
     mask = torch.triu(mask, diagonal = 1).to(device)
 
     if(MODE == 0 or MODE == 2):
-        # training_src_notes = np.zeros((BATCH, MAX_SEQ_LENGTH), dtype = 'int32')
-        # training_src_notes = np.zeros((BATCH * MAX_SEQ_LENGTH), dtype = 'int32')
         training_src_encoder_1 = np.zeros((BATCH * MAX_SEQ_LENGTH), dtype = 'int32')
-        # training_data_beats = np.zeros((BATCH * MAX_SEQ_LENGTH), dtype = 'int32')
         
         GPROFOLDER = './gprofiles/'
         j = 0
@@ -83,13 +80,7 @@ if __name__ == '__main__':
                             L += 1
                             for beat in measure.voices[0].beats:
                                 for note_index, note in enumerate(beat.notes):
-                                    # note.value = encoding.MAPPING_NOTE.get(note.value, note.value)
-                                    # print(note.value, note.string, note.beat.duration.value)
-                                    # training_src_notes[L] = getencodingnotes(note.value,
-                                    #                                            note.string,
-                                    #                                            tuning)
-                                    training_src_encoder_1[L] = encoder_1(note.value, note.string, note.beat.duration, note.effect.palmMute + 1)
-                                    # training_data_beats[L] = getencodingbeats(note.beat.duration)
+                                    training_src_encoder_1[L] = tokenizer_1(note.value, note.string, note.beat.duration, note.effect.palmMute + 1)
                                     L += 1
                                     if(note_index != 0):
                                         training_src_encoder_1[L] = BARRE_NOTE
@@ -99,29 +90,18 @@ if __name__ == '__main__':
                         # L += 1
                         k += 1
 
-        # training_src_notes = training_src_notes.reshape(BATCH, MAX_SEQ_LENGTH)
         training_src_encoder_1 = training_src_encoder_1.reshape(BATCH, MAX_SEQ_LENGTH)
         training_tgt_notes = training_src_encoder_1.copy().astype(np.int64)
-        # print("Notes")
-        # training_src_notes[:,4] = 0
         print("Source")
         print(training_src_encoder_1)
-        # print("Target")
-        # print(training_tgt_notes)
 
         iteration = 0
         criterion = torch.nn.MSELoss()
-        # encoder = EncoderAPE(device, D_MODEL, FFN_HIDDEN, MAX_SEQ_LENGTH, NUM_HEADS,
-        #                     DROP_PROB, NUM_LAYERS)
-        
-        # encoder.train()
         lossplot = []
         loss_fn = nn.CrossEntropyLoss()
 
         token_ids = torch.tensor(training_src_encoder_1).to(device)
-        # src = torch.from_numpy(training_src_notes).to(device)
         target = torch.from_numpy(training_tgt_notes).to(device)
-        # prediction_val = encoder(input_embeddings).to(device)
         
         while iteration <= EPOCHS:
             decoder.train()
@@ -131,13 +111,11 @@ if __name__ == '__main__':
             input_embeddings = embeddings + pos_enc
 
             logits = decoder(input_embeddings, mask)
-            # probabilities = F.softmax(prediction_val, dim=-1)
 
             logits = logits.view(-1, VOCAB_SIZE)  # Flatten logits to (batch_size * seq_length, d_vocab)
             target = target.view(-1)
 
             loss = loss_fn(logits, target)
-            # loss = criterion(target, prediction_val)
 
             print(iteration + 1, loss.item())
             loss.backward()
@@ -169,7 +147,8 @@ if __name__ == '__main__':
         dummy_np[0, 0] = BOS
         dummy_np[0, 1] = START_ID
         dummy_in = torch.tensor(dummy_np).to(device)
-        decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask, MAX_SEQ_LENGTH)
-
+        dummy_in = decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask, MAX_SEQ_LENGTH)
+        for dummy in dummy_in:
+            print(dummy)
 
     print("Finished")
