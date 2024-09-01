@@ -4,19 +4,19 @@
 
 MAPPING_BEAT = {
     # pure : base, triplet, quintuplet, sextuplet, septuplet, 9 tuplets, 11-tuplets (1-7)
-    # dotted : base, triplet, quintuplet, sextuplet, septuplet, 9 tuplets, 11-tuplets (8-13)
+    # dotted : base, triplet, quintuplet, sextuplet, septuplet, 9 tuplets, 11-tuplets (8-14)
     # full
-    1  : 64,
+    1  : 69, # 69 - 82
     # half
-    2  : 51, 
+    2  : 55, 
     # quarter
-    4  : 38,
+    4  : 41,
     # 8th
-    8  : 25,
+    8  : 29,
     # 16th
-    16 : 14,
+    16 : 15,
     # 32nd
-    32 : 1  # 1,2,3,4,5,6,7,8,9,10,12,13
+    32 : 1  # 1,2,3,4,5,6,7,8,9,10,11,12,13,14
 }
 
 def getencodingnotes(note, string, tuning):
@@ -41,8 +41,6 @@ def getencodingbeats(duration):
     # 10 : Dotted-8th
     # 11 : Quarter
     # 12 : Dotted-Quarter
-    # 0 - 132   : # 1
-    # 133 - 265 : # 2
     beatvalue = MAPPING_BEAT.get(duration.value)
     if duration.tuplet.enters == 3:
         beatvalue += 1
@@ -59,3 +57,35 @@ def getencodingbeats(duration):
     if duration.isDotted:
         beatvalue += 8
     return beatvalue
+
+def encoder_1(note, string, duration, n):
+    # 7 strings, 23 notes per string, + Palm_Mute
+    # 161 * 2 total notes / beat
+    # Note formula = n * 23 * String + note, n = 2 if Palm_Mute, else n = 1
+    # 
+    # String formula = (Note % 23) - 1
+    # 82 total beats
+    # 161 * 2 * 82 = 26404 unique combinations
+    # 1 - 322 =  base note
+    # 323 - 644 = triplet
+    # .....
+    # 
+    # Unique combination formula = Note formula + (m * 322), m = mapping_beat number
+    note_formula = (note + 1) + (string - 1) * 23 + (7 * 23) * (n - 1)
+    beatvalue = MAPPING_BEAT.get(duration.value)
+    if duration.tuplet.enters == 3:
+        beatvalue += 1
+    if duration.tuplet.enters == 5:
+        beatvalue += 2
+    if duration.tuplet.enters == 6:
+        beatvalue += 3
+    if duration.tuplet.enters == 7:
+        beatvalue += 4
+    if duration.tuplet.enters == 9:
+        beatvalue += 5
+    if duration.tuplet.enters == 11:
+        beatvalue += 6
+    if duration.isDotted:
+        beatvalue += 8
+    encoding = note_formula + beatvalue * 322
+    return encoding
