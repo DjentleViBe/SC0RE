@@ -8,7 +8,7 @@ Riff generation using various Transformers Architecture
 
 ### Installation
 Use virtual environment if possible <br>
-`pip install -r requirements.txt`
+```pip install -r requirements-{OS_TYPE}.txt```
 
 ## Running
 ### Training
