@@ -1,7 +1,7 @@
 """Defines parameters required for ttraining and inference"""
 
 ################################ transformers #################################
-MODE            =   0  # 0: train, # 1 : eval, # 2 : both
+MODE            =   1  # 0: train, # 1 : eval, # 2 : both
 BACKUP          =   "dec_only_notes_5"
 START_ID        =   9592
 ########## Params ##############

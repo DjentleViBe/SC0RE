@@ -10,6 +10,7 @@ from encoding import tokenizer_1
 from decoding import detokenizer_1
 from _decoder.decoder import DecoderAPE
 import config as cfg
+from postprocess import makegpro
 np.set_printoptions(threshold=sys.maxsize)
 
 if __name__ == '__main__':
@@ -132,7 +133,17 @@ if __name__ == '__main__':
         dummy_in = torch.tensor(dummy_np).to(device)
         dummy_in = decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask,
                                      cfg.MAX_SEQ_LENGTH).cpu().numpy()
+        noteval = []
+        notetypeval = []
+        stringnum = []
+        beatval = []
+        palmval = []
         for dummy in dummy_in[0]:
-            detokenizer_1(dummy)
-
+            note, notetype, string, beat, palm = detokenizer_1(dummy)
+            noteval.append(note)
+            notetypeval.append(notetype)
+            stringnum.append(string)
+            beatval.append(beat)
+            palmval.append(palm)
+        makegpro(cfg.BACKUP, noteval, notetypeval, stringnum, beatval, palmval)
     print("Finished")
