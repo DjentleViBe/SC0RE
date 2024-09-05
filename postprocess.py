@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as F
 import guitarpro as gp
-from config import EOS, BOS, BARRE_NOTE
+from config import EOS, BOS, BARRE_NOTE, MEASURE
 
 DEMAPPING_BEAT_DETYPE = {
     'Base---------------' : 1,
@@ -67,6 +67,7 @@ def getnotetype(notetype):
 
 def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
     """Generate gpro file"""
+    
     # Create a new Guitar Pro song
     song = gp.models.Song()
 
@@ -76,7 +77,15 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
     song.tempo = 120  # Set the tempo
     song.tracks[0].name = "Guitar"
     song.tracks[0].channel.instrument = 30
-    song.tracks[0].measures[0].timeSignature.numerator = 32
+    song.tracks[0].measures[0].timeSignature.numerator = MEASURE
+    song.tracks[0].strings[0].value = 58
+    song.tracks[0].strings[1].value = 53
+    song.tracks[0].strings[2].value = 49
+    song.tracks[0].strings[3].value = 44
+    song.tracks[0].strings[4].value = 39
+    song.tracks[0].strings[5].value = 32
+    
+
     voice = song.tracks[0].measures[0].voices[0]
 
     k = 0
