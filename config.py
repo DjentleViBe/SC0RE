@@ -2,7 +2,7 @@
 
 ################################ transformers #################################
 MODE            =   1  # 0: train, # 1 : eval, # 2 : both
-BACKUP          =   "dec_only_notes_6"
+BACKUP          =   "dec_only_notes_7"
 START_ID        =   9592
 ########## Params ##############
 EPOCHS          =   1000
@@ -18,6 +18,7 @@ PATCH           =   1
 STRIDE          =   1
 TRAINING        =   ["CB"]
 BATCH           =   890
+CONVERGENCE     =   0.0005
 
 EOS             =   26405
 BOS             =   26406

@@ -108,7 +108,7 @@ if __name__ == '__main__':
             ITERATION += 1
             lossplot.append(loss.item())
 
-            if loss.item() < 0.001:
+            if loss.item() < cfg.CONVERGENCE:
                 break
 
         checkpoint = {
