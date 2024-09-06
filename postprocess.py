@@ -89,6 +89,7 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
     voice = song.tracks[0].measures[0].voices[0]
 
     k = 0
+    l = 0
     beat_collect = []
     note_collect = []
     for n, note in enumerate(noteval):
@@ -96,16 +97,19 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
             continue
         elif note == BOS:
             continue
+        elif note == BARRE_NOTE:
+            l -= 1
+            print(BARRE_NOTE)
         else:
             beat_collect.append(gp.Beat(voice=voice))
             voice.beats.append(beat_collect[k])
             note_collect.append(gp.Note(beat = beat_collect[k]))
-            note_collect[k].value = note
-            note_collect[k].effect.palmMute = palmval[n]
-            note_collect[k].string = min(stringnum[n], 6)
+            note_collect[l].value = note
+            note_collect[l].effect.palmMute = palmval[n]
+            note_collect[l].string = min(stringnum[n], 6)
             
             # beat_val = note_collect[k].beat
-            note_collect[k].beat.duration.value, b_val = getnotetype(beatval[n])
+            note_collect[l].beat.duration.value, b_val = getnotetype(beatval[n])
             # print(n, 
             #      note_collect[k].beat.duration.value, 
             #      b_val, note, 
@@ -134,8 +138,9 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
                 note_collect[k].beat.duration.tuplet.times = 8
             
 
-            beat_collect[k].notes.append(note_collect[k])
+            beat_collect[k].notes.append(note_collect[l])
             k += 1
+            l += 1
 
     # Save the song to a Guitar Pro file
     with open("./RESULTS/" + filename + ".gp5", 'wb') as file:
