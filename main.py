@@ -96,10 +96,11 @@ if __name__ == '__main__':
             logits = decoder(input_embeddings, mask)
             # Flatten logits to (batch_size * seq_length, d_vocab)
             logits = logits.view(-1, cfg.VOCAB_SIZE)
+            scaled_logits = logits / cfg.TEMPERATURE
 
             target = target.view(-1)
 
-            loss = loss_fn(logits, target)
+            loss = loss_fn(scaled_logits, target)
 
             print(f"{ITERATION + 1} : {loss.item()}")
             loss.backward()
