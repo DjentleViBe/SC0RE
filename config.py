@@ -2,10 +2,11 @@
 
 ################################ transformers #################################
 MODE            =   1  # 0: train, # 1 : eval, # 2 : both
-BACKUP          =   "dec_only_notes_8"
+BACKUP          =   "dec_only_notes_11"
+SAVE            =   "dec_only_notes_11C"
 START_ID        =   7500
 ########## Params ##############
-EPOCHS          =   1000
+EPOCHS          =   3000
 VOCAB_SIZE      =   26412
 FFN_HIDDEN      =   1024
 MAX_SEQ_LENGTH  =   12
@@ -19,7 +20,7 @@ STRIDE          =   1
 TRAINING        =   ["CB"]
 BATCH           =   890
 CONVERGENCE     =   0.0005
-TEMPERATURE     =   2
+TEMPERATURE     =   5
 
 EOS             =   26405
 BOS             =   26406

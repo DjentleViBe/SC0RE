@@ -146,5 +146,5 @@ if __name__ == '__main__':
             stringnum.append(string)
             beatval.append(beat)
             palmval.append(palm)
-        makegpro(cfg.BACKUP, noteval, notetypeval, stringnum, beatval, palmval)
+        makegpro(cfg.SAVE, noteval, notetypeval, stringnum, beatval, palmval)
     print("Finished")
