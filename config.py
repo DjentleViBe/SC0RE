@@ -1,7 +1,7 @@
 """Defines parameters required for ttraining and inference"""
 
 ################################ transformers #################################
-MODE            =   1  # 0: train, # 1 : eval, # 2 : both
+MODE            =   0  # 0: train, # 1 : eval, # 2 : both
 BACKUP          =   "dec_only_notes_11"
 SAVE            =   "dec_only_notes_11C"
 START_ID        =   7500
@@ -25,5 +25,17 @@ TEMPERATURE     =   5
 EOS             =   26405
 BOS             =   26406
 BARRE_NOTE      =   26407
+BEND_NOTE_1     =   26408
+BEND_NOTE_2     =   26409
+BEND_NOTE_3     =   26410
+BEND_NOTE_4     =   26411
+BEND_NOTE_5     =   26412
+BEND_NOTE_6     =   26413
+BEND_NOTE_7     =   26414
+TREM_BAR_1      =   26415
+TREM_BAR_2      =   26416
+TREM_BAR_3      =   26417
+TREM_BAR_4      =   26418
+TREM_BAR_5      =   26419
 #################################################################################
 MEASURE         =   16

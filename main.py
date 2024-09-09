@@ -68,6 +68,36 @@ if __name__ == '__main__':
                                     if note_index != 0:
                                         training_src_encoder_1[L] = cfg.BARRE_NOTE
                                         L += 1
+
+                                    if note.effect.isBend == True:
+                                        if note.effect.bend.type.value == 1:
+                                            training_src_encoder_1[L] = cfg.BEND_NOTE_1
+                                        elif note.effect.bend.type.value == 2:
+                                            training_src_encoder_1[L] = cfg.BEND_NOTE_2
+                                        elif note.effect.bend.type.value == 3:
+                                            training_src_encoder_1[L] = cfg.BEND_NOTE_3
+                                        elif note.effect.bend.type.value == 4:
+                                            training_src_encoder_1[L] = cfg.BEND_NOTE_4
+                                        elif note.effect.bend.type.value == 5:
+                                            training_src_encoder_1[L] = cfg.BEND_NOTE_5
+                                        elif note.effect.bend.type.value == 6:
+                                            training_src_encoder_1[L] = cfg.BEND_NOTE_6
+                                        elif note.effect.bend.type.value == 7:
+                                            training_src_encoder_1[L] = cfg.BEND_NOTE_7
+                                        L += 1
+
+                                    if beat.effect.tremoloBar == True:
+                                        if beat.effect.tremoloBar.type == 1:
+                                            training_src_encoder_1[L] = cfg.TREM_BAR_1
+                                        elif beat.effect.tremoloBar.type == 2:
+                                            training_src_encoder_1[L] = cfg.TREM_BAR_2
+                                        elif beat.effect.tremoloBar.type == 3:
+                                            training_src_encoder_1[L] = cfg.TREM_BAR_3
+                                        elif beat.effect.tremoloBar.type == 4:
+                                            training_src_encoder_1[L] = cfg.TREM_BAR_4
+                                        elif beat.effect.tremoloBar.type == 5:
+                                            training_src_encoder_1[L] = cfg.TREM_BAR_5
+
                             training_src_encoder_1[L] = cfg.EOS
                             L += 1
                         # L += 1
