@@ -67,7 +67,7 @@ def getnotetype(notetype):
 
 def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
     """Generate gpro file"""
-    
+
     # Create a new Guitar Pro song
     song = gp.models.Song()
 
@@ -84,12 +84,12 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
     song.tracks[0].strings[3].value = 44
     song.tracks[0].strings[4].value = 39
     song.tracks[0].strings[5].value = 32
-    
+
 
     voice = song.tracks[0].measures[0].voices[0]
 
-    k = 0
-    l = 0
+    k_val = 0
+    l_val = 0
     beat_collect = []
     note_collect = []
     for n, note in enumerate(noteval):
@@ -98,49 +98,48 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
         elif note == BOS:
             continue
         elif note == BARRE_NOTE:
-            l -= 1
+            l_val -= 1
             print(BARRE_NOTE)
         else:
             beat_collect.append(gp.Beat(voice=voice))
-            voice.beats.append(beat_collect[k])
-            note_collect.append(gp.Note(beat = beat_collect[k]))
-            note_collect[l].value = note
-            note_collect[l].effect.palmMute = palmval[n]
-            note_collect[l].string = min(stringnum[n], 6)
-            
-            # beat_val = note_collect[k].beat
-            note_collect[l].beat.duration.value, b_val = getnotetype(beatval[n])
-            # print(n, 
-            #      note_collect[k].beat.duration.value, 
-            #      b_val, note, 
-            #      str(note_collect[k].string), 
-            #      palmval[n])
-            
-            if b_val >= 8:
-                note_collect[k].beat.duration.isDotted = True
-            if b_val == 2 or b_val == 9:
-                note_collect[k].beat.duration.tuplet.enters = 3
-                note_collect[k].beat.duration.tuplet.times = 2
-            if b_val == 3 or b_val == 10:
-                note_collect[k].beat.duration.tuplet.enters = 5
-                note_collect[k].beat.duration.tuplet.times = 4
-            if b_val == 4 or b_val == 11:
-                note_collect[k].beat.duration.tuplet.enters = 6
-                note_collect[k].beat.duration.tuplet.times = 4
-            if b_val == 5 or b_val == 12:
-                note_collect[k].beat.duration.tuplet.enters = 7
-                note_collect[k].beat.duration.tuplet.times = 4
-            if b_val == 6 or b_val == 13:
-                note_collect[k].beat.duration.tuplet.enters = 9
-                note_collect[k].beat.duration.tuplet.times = 8
-            if b_val == 7 or b_val == 14:
-                note_collect[k].beat.duration.tuplet.enters = 11
-                note_collect[k].beat.duration.tuplet.times = 8
-            
+            voice.beats.append(beat_collect[k_val])
+            note_collect.append(gp.Note(beat = beat_collect[k_val]))
+            note_collect[l_val].value = note
+            note_collect[l_val].effect.palmMute = palmval[n]
+            note_collect[l_val].string = min(stringnum[n], 6)
 
-            beat_collect[k].notes.append(note_collect[l])
-            k += 1
-            l += 1
+            # beat_val = note_collect[k].beat
+            note_collect[l_val].beat.duration.value, b_val = getnotetype(beatval[n])
+            # print(n,
+            #      note_collect[k].beat.duration.value,
+            #      b_val, note,
+            #      str(note_collect[k].string),
+            #      palmval[n])
+
+            if b_val >= 8:
+                note_collect[k_val].beat.duration.isDotted = True
+            if b_val in (2, 9):
+                note_collect[k_val].beat.duration.tuplet.enters = 3
+                note_collect[k_val].beat.duration.tuplet.times = 2
+            if b_val in (3, 10):
+                note_collect[k_val].beat.duration.tuplet.enters = 5
+                note_collect[k_val].beat.duration.tuplet.times = 4
+            if b_val in (4, 11):
+                note_collect[k_val].beat.duration.tuplet.enters = 6
+                note_collect[k_val].beat.duration.tuplet.times = 4
+            if b_val in (5, 12):
+                note_collect[k_val].beat.duration.tuplet.enters = 7
+                note_collect[k_val].beat.duration.tuplet.times = 4
+            if b_val in (6, 13):
+                note_collect[k_val].beat.duration.tuplet.enters = 9
+                note_collect[k_val].beat.duration.tuplet.times = 8
+            if b_val in (7, 14):
+                note_collect[k_val].beat.duration.tuplet.enters = 11
+                note_collect[k_val].beat.duration.tuplet.times = 8
+
+            beat_collect[k_val].notes.append(note_collect[l_val])
+            k_val += 1
+            l_val += 1
 
     # Save the song to a Guitar Pro file
     with open("./RESULTS/" + filename + ".gp5", 'wb') as file:

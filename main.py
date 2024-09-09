@@ -5,12 +5,11 @@ import numpy as np
 import torch
 from torch import nn
 from preprocess import readgpro, guitarinfo, get_positional_encoding, create_dir
-from postprocess import plot, decoder_inference
+from postprocess import plot, decoder_inference, makegpro
 from encoding import tokenizer_1
 from decoding import detokenizer_1
 from _decoder.decoder import DecoderAPE
 import config as cfg
-from postprocess import makegpro
 np.set_printoptions(threshold=sys.maxsize)
 
 if __name__ == '__main__':
@@ -52,10 +51,6 @@ if __name__ == '__main__':
                     for track in song.tracks:
                         # Map values to Genaral MIDI.
                         for measure in track.measures:
-                            #for voice in measure.voices:
-                            #print(f"Voice {voice.index}:")
-                            # L = 0
-
                             training_src_encoder_1[L] = cfg.BOS
                             L += 1
                             for beat in measure.voices[0].beats:
@@ -69,7 +64,7 @@ if __name__ == '__main__':
                                         training_src_encoder_1[L] = cfg.BARRE_NOTE
                                         L += 1
 
-                                    if note.effect.isBend == True:
+                                    if note.effect.isBend is True:
                                         if note.effect.bend.type.value == 1:
                                             training_src_encoder_1[L] = cfg.BEND_NOTE_1
                                         elif note.effect.bend.type.value == 2:
@@ -86,7 +81,7 @@ if __name__ == '__main__':
                                             training_src_encoder_1[L] = cfg.BEND_NOTE_7
                                         L += 1
 
-                                    if beat.effect.tremoloBar == True:
+                                    if beat.effect.tremoloBar is True:
                                         if beat.effect.tremoloBar.type == 1:
                                             training_src_encoder_1[L] = cfg.TREM_BAR_1
                                         elif beat.effect.tremoloBar.type == 2:

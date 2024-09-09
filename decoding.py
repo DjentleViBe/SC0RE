@@ -1,5 +1,5 @@
 """Decoding results"""
-from config import EOS, BOS, BARRE_NOTE, BACKUP
+from config import EOS, BOS, BARRE_NOTE
 
 DEMAPPING_BEAT_TYPE = {
     1:   'Base---------------',
@@ -70,6 +70,6 @@ def detokenizer_1(dummy):
             note_val = note_type % string_num
 
         print(f"Beat : {beat_type} String : {string_num} Note : {note_val} PalmMute : {palm_mute}")
-    
-    
+
+
     return note_val, note_type, string_num, dummy // 322, palm_mute
