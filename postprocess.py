@@ -3,7 +3,9 @@ import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as F
 import guitarpro as gp
-from config import EOS, BOS, BARRE_NOTE, MEASURE
+from config import (EOS, BOS, BARRE_NOTE, MEASURE, BEND_NOTE_1, BEND_NOTE_2, BEND_NOTE_3,
+BEND_NOTE_4, BEND_NOTE_5, BEND_NOTE_6, BEND_NOTE_7, TREM_BAR_1, TREM_BAR_2, TREM_BAR_3,
+TREM_BAR_4, TREM_BAR_5)
 
 DEMAPPING_BEAT_DETYPE = {
     'Base---------------' : 1,
@@ -93,6 +95,36 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
     beat_collect = []
     note_collect = []
     for n, note in enumerate(noteval):
+        if BEND_NOTE_1 <= note <= BEND_NOTE_7:
+            note_collect[l_val - 1].effect.isBend = True
+            if note == BEND_NOTE_1:
+                note_collect[l_val - 1].effect.bend.type.value == 1
+            elif note == BEND_NOTE_2:
+                note_collect[l_val - 1].effect.bend.type.value == 2
+            elif note == BEND_NOTE_3:
+                note_collect[l_val - 1].effect.bend.type.value == 3
+            elif note == BEND_NOTE_4:
+                note_collect[l_val - 1].effect.bend.type.value == 4
+            elif note == BEND_NOTE_5:
+                note_collect[l_val - 1].effect.bend.type.value == 5
+            elif note == BEND_NOTE_6:
+                note_collect[l_val - 1].effect.bend.type.value == 6
+            elif note == BEND_NOTE_7:
+                note_collect[l_val - 1].effect.bend.type.value == 7
+
+        if TREM_BAR_1 <= note <= TREM_BAR_5:
+            note_collect[l_val - 1].effect.tremoloBar = True
+            if note == TREM_BAR_1:
+                beat_collect[l_val - 1].effect.bend.type == 1
+            elif note == TREM_BAR_2:
+                beat_collect[l_val - 1].effect.bend.type == 2
+            elif note == TREM_BAR_3:
+                beat_collect[l_val - 1].effect.bend.type == 3
+            elif note == TREM_BAR_4:
+                beat_collect[l_val - 1].effect.bend.type == 4
+            elif note == TREM_BAR_5:
+                beat_collect[l_val - 1].effect.bend.type == 5
+
         if note == EOS:
             continue
         elif note == BOS:
@@ -108,13 +140,7 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
             note_collect[l_val].effect.palmMute = palmval[n]
             note_collect[l_val].string = min(stringnum[n], 6)
 
-            # beat_val = note_collect[k].beat
             note_collect[l_val].beat.duration.value, b_val = getnotetype(beatval[n])
-            # print(n,
-            #      note_collect[k].beat.duration.value,
-            #      b_val, note,
-            #      str(note_collect[k].string),
-            #      palmval[n])
 
             if b_val >= 8:
                 note_collect[k_val].beat.duration.isDotted = True

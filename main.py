@@ -164,7 +164,8 @@ if __name__ == '__main__':
         stringnum = []
         beatval = []
         palmval = []
-        for dummy in dummy_in[0]:
+        for ind, dummy in enumerate(dummy_in[0]):
+            print(ind + 1, end=' ')
             note, notetype, string, beat, palm = detokenizer_1(dummy)
             noteval.append(note)
             notetypeval.append(notetype)

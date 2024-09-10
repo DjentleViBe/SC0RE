@@ -1,9 +1,9 @@
-"""Defines parameters required for ttraining and inference"""
+"""Defines parameters required for training and inference"""
 
 ################################ transformers #################################
-MODE            =   0  # 0: train, # 1 : eval, # 2 : both
-BACKUP          =   "dec_only_notes_11"
-SAVE            =   "dec_only_notes_11C"
+MODE            =   1  # 0: train, # 1 : eval, # 2 : both
+BACKUP          =   "dec_only_notes_13"
+SAVE            =   "dec_only_notes_13A"
 START_ID        =   7500
 ########## Params ##############
 EPOCHS          =   3000
