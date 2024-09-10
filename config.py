@@ -7,7 +7,7 @@ SAVE            =   "dec_only_notes_13A"
 START_ID        =   7500
 ########## Params ##############
 EPOCHS          =   3000
-VOCAB_SIZE      =   26412
+VOCAB_SIZE      =   26420
 FFN_HIDDEN      =   1024
 MAX_SEQ_LENGTH  =   12
 NUM_HEADS       =   2
