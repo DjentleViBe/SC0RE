@@ -1,7 +1,7 @@
 """Defines parameters required for training and inference"""
 
 ################################ transformers #################################
-MODE            =   1  # 0: train, # 1 : eval, # 2 : both
+MODE            =   0  # 0: train, # 1 : eval, # 2 : both
 BACKUP          =   "dec_only_notes_13"
 SAVE            =   "dec_only_notes_13A"
 START_ID        =   7500
@@ -18,7 +18,7 @@ LEARNING_RATE   =   0.01
 PATCH           =   1
 STRIDE          =   1
 TRAINING        =   ["CB"]
-BATCH           =   890
+BATCH           =   950
 CONVERGENCE     =   0.0005
 TEMPERATURE     =   5
 
