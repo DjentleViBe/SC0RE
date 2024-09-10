@@ -64,7 +64,7 @@ if __name__ == '__main__':
                                         training_src_encoder_1[L] = cfg.BARRE_NOTE
                                         L += 1
 
-                                    if note.effect.isBend is True:
+                                    if note.effect.isBend > 0:
                                         if note.effect.bend.type.value == 1:
                                             training_src_encoder_1[L] = cfg.BEND_NOTE_1
                                         elif note.effect.bend.type.value == 2:
@@ -81,7 +81,7 @@ if __name__ == '__main__':
                                             training_src_encoder_1[L] = cfg.BEND_NOTE_7
                                         L += 1
 
-                                    if beat.effect.tremoloBar is True:
+                                    if beat.effect.isTremoloBar is True:
                                         if beat.effect.tremoloBar.type == 1:
                                             training_src_encoder_1[L] = cfg.TREM_BAR_1
                                         elif beat.effect.tremoloBar.type == 2:
