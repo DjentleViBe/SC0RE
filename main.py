@@ -92,6 +92,7 @@ if __name__ == '__main__':
                                             training_src_encoder_1[L] = cfg.TREM_BAR_4
                                         elif beat.effect.tremoloBar.type == 5:
                                             training_src_encoder_1[L] = cfg.TREM_BAR_5
+                                        L += 1
 
                             training_src_encoder_1[L] = cfg.EOS
                             L += 1
