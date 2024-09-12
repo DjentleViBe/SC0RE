@@ -126,12 +126,14 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
                 beat_collect[l_val - 1].effect.tremoloBar.type = 5
 
         if note == EOS:
+            # print("-----EOS-----")
             continue
         elif note == BOS:
+            # print("-----BOS-----")
             continue
         elif note == BARRE_NOTE:
             l_val -= 1
-            print(BARRE_NOTE)
+            # print("-----Barred Note-----")
         else:
             beat_collect.append(gp.Beat(voice=voice))
             voice.beats.append(beat_collect[k_val])

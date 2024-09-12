@@ -47,13 +47,13 @@ def detokenizer_1(dummy):
     string_num = 0
     palm_mute = False
     if dummy == EOS:
-        print(f"{EOS}")
+        print(f"-------EOS-------")
         note_val = EOS
     elif dummy == BOS:
-        print(f"{BOS}")
+        print(f"-------BOS-------")
         note_val = BOS
     elif dummy == BARRE_NOTE:
-        print("-------Barred Note---------")
+        print("--------Barred Note--------")
         note_val = BARRE_NOTE
     else:
         palm_mute = False
