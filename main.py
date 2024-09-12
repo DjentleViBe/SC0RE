@@ -82,15 +82,15 @@ if __name__ == '__main__':
                                         L += 1
 
                                     if beat.effect.isTremoloBar is True:
-                                        if beat.effect.tremoloBar.type == 1:
+                                        if beat.effect.tremoloBar.type.value == 1:
                                             training_src_encoder_1[L] = cfg.TREM_BAR_1
-                                        elif beat.effect.tremoloBar.type == 2:
+                                        elif beat.effect.tremoloBar.type.value == 2:
                                             training_src_encoder_1[L] = cfg.TREM_BAR_2
-                                        elif beat.effect.tremoloBar.type == 3:
+                                        elif beat.effect.tremoloBar.type.value == 3:
                                             training_src_encoder_1[L] = cfg.TREM_BAR_3
-                                        elif beat.effect.tremoloBar.type == 4:
+                                        elif beat.effect.tremoloBar.type.value == 4:
                                             training_src_encoder_1[L] = cfg.TREM_BAR_4
-                                        elif beat.effect.tremoloBar.type == 5:
+                                        elif beat.effect.tremoloBar.type.value == 5:
                                             training_src_encoder_1[L] = cfg.TREM_BAR_5
                                         L += 1
 
