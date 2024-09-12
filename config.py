@@ -2,19 +2,19 @@
 
 ################################ transformers #################################
 MODE            =   0  # 0: train, # 1 : eval, # 2 : both
-BACKUP          =   "dec_only_notes_13"
-SAVE            =   "dec_only_notes_13A"
-START_ID        =   7500
+BACKUP          =   "dec_only_notes_14"
+SAVE            =   "dec_only_notes_14C"
+START_ID        =   9500
 ########## Params ##############
 EPOCHS          =   3000
 VOCAB_SIZE      =   26420
 FFN_HIDDEN      =   1024
 MAX_SEQ_LENGTH  =   12
-NUM_HEADS       =   2
+NUM_HEADS       =   12
 DROP_PROB       =   0.3
-NUM_LAYERS      =   2
-D_MODEL         =   60
-LEARNING_RATE   =   0.01
+NUM_LAYERS      =   12
+D_MODEL         =   240
+LEARNING_RATE   =   0.0005
 PATCH           =   1
 STRIDE          =   1
 TRAINING        =   ["CB"]

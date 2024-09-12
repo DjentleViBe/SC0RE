@@ -1,6 +1,7 @@
 """Training riffs using ML"""
 import os
 import sys
+import shutil
 import numpy as np
 import torch
 from torch import nn
@@ -32,11 +33,10 @@ if __name__ == '__main__':
     mask = torch.triu(mask, diagonal = 1).to(device)
 
     if cfg.MODE in (0, 2):
+        shutil.copy("./config.py", "./RESULTS/" + cfg.BACKUP + ".py")
         training_src_encoder_1 = np.zeros((cfg.BATCH * cfg.MAX_SEQ_LENGTH), dtype = 'int32')
 
         GPROFOLDER = './gprofiles/'
-        j = 0
-        k = 0
         L = 0
         for f in cfg.TRAINING:
             for filename in os.listdir(GPROFOLDER + f):
@@ -96,8 +96,6 @@ if __name__ == '__main__':
 
                             training_src_encoder_1[L] = cfg.EOS
                             L += 1
-                        # L += 1
-                        k += 1
 
         training_src_encoder_1 = training_src_encoder_1.reshape(cfg.BATCH, cfg.MAX_SEQ_LENGTH)
         training_tgt_notes = training_src_encoder_1.copy().astype(np.int64)
