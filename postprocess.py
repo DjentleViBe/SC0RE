@@ -96,34 +96,34 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
     note_collect = []
     for n, note in enumerate(noteval):
         if BEND_NOTE_1 <= note <= BEND_NOTE_7:
-            note_collect[l_val - 1].effect.isBend > 0
+            note_collect[l_val - 1].effect.isBend = True
             if note == BEND_NOTE_1:
-                note_collect[l_val - 1].effect.bend.type.value == 1
+                note_collect[l_val - 1].effect.bend.type.value = 1
             elif note == BEND_NOTE_2:
-                note_collect[l_val - 1].effect.bend.type.value == 2
+                note_collect[l_val - 1].effect.bend.type.value = 2
             elif note == BEND_NOTE_3:
-                note_collect[l_val - 1].effect.bend.type.value == 3
+                note_collect[l_val - 1].effect.bend.type.value = 3
             elif note == BEND_NOTE_4:
-                note_collect[l_val - 1].effect.bend.type.value == 4
+                note_collect[l_val - 1].effect.bend.type.value = 4
             elif note == BEND_NOTE_5:
-                note_collect[l_val - 1].effect.bend.type.value == 5
+                note_collect[l_val - 1].effect.bend.type.value = 5
             elif note == BEND_NOTE_6:
-                note_collect[l_val - 1].effect.bend.type.value == 6
+                note_collect[l_val - 1].effect.bend.type.value = 6
             elif note == BEND_NOTE_7:
-                note_collect[l_val - 1].effect.bend.type.value == 7
+                note_collect[l_val - 1].effect.bend.type.value = 7
 
         if TREM_BAR_1 <= note <= TREM_BAR_5:
             note_collect[l_val - 1].effect.isTremoloBar = True
             if note == TREM_BAR_1:
-                beat_collect[l_val - 1].effect.tremoloBar.type == 1
+                beat_collect[l_val - 1].effect.tremoloBar.type = 1
             elif note == TREM_BAR_2:
-                beat_collect[l_val - 1].effect.tremoloBar.type == 2
+                beat_collect[l_val - 1].effect.tremoloBar.type = 2
             elif note == TREM_BAR_3:
-                beat_collect[l_val - 1].effect.tremoloBar.type == 3
+                beat_collect[l_val - 1].effect.tremoloBar.type = 3
             elif note == TREM_BAR_4:
-                beat_collect[l_val - 1].effect.tremoloBar.type == 4
+                beat_collect[l_val - 1].effect.tremoloBar.type = 4
             elif note == TREM_BAR_5:
-                beat_collect[l_val - 1].effect.tremoloBar.type == 5
+                beat_collect[l_val - 1].effect.tremoloBar.type = 5
 
         if note == EOS:
             continue
