@@ -62,9 +62,9 @@ def getnotetype(notetype):
         return 8, notetype - 28
     elif 41 <= notetype <= 54:
         return 4, notetype - 40
-    elif 54 <= notetype < 68:
-        return 2, notetype - 55
-    else:
+    elif 55 <= notetype <= 68:
+        return 2, notetype - 54
+    elif 69 <= notetype <= 82:
         return 1, notetype - 68
 
 def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
