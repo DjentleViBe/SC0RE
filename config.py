@@ -1,11 +1,12 @@
 """Defines parameters required for training and inference"""
 
 ################################ transformers #################################
-MODE            =   2  # 0: train, # 1 : eval, # 2 : both
+MODE            =   1  # 0: train, # 1 : eval, # 2 : both
 BACKUP          =   "dec_only_notes_16"
 SAVE            =   "dec_only_notes_16A"
-START_ID        =   15922
+START_ID        =   449
 BOS_TRUE        =   1
+TEST_CRITERIA   =   1
 ########## Params ##############
 EPOCHS          =   1500
 VOCAB_SIZE      =   26420
