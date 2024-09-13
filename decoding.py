@@ -1,4 +1,5 @@
 """Decoding results"""
+from config import EOS, BOS, BARRE_NOTE
 
 DEMAPPING_BEAT_TYPE = {
     1:   'Base---------------',
@@ -41,17 +42,34 @@ def demapping_beat(beat):
 
 def detokenizer_1(dummy):
     """Derive notes from token"""
+    note_val = 0
+    note_type = 0
+    string_num = 0
     palm_mute = False
-    beat_type = demapping_beat(dummy // 322)
-    note_type = dummy % 322
-    if note_type > 161:
-        # Palm mute
-        palm_mute = True
-        string_num = (note_type - 161) // 23
-        note_val = (note_type - 161) % string_num
+    if dummy == EOS:
+        print(f"-------EOS-------")
+        note_val = EOS
+    elif dummy == BOS:
+        print(f"-------BOS-------")
+        note_val = BOS
+    elif dummy == BARRE_NOTE:
+        print("--------Barred Note--------")
+        note_val = BARRE_NOTE
     else:
-        string_num = note_type // 23
-        note_val = note_type % string_num
+        palm_mute = False
+        beat_type = demapping_beat(dummy // 322)
+        note_type = dummy % 322
+        if note_type > 161:
+            # Palm mute
+            note_type -= 161
+            palm_mute = True
+            string_num = (note_type) // 23 + 1
+            note_val = (note_type) % string_num
+        else:
+            string_num = note_type // 23 + 1
+            note_val = note_type % string_num
 
-    print(f"Beat : {beat_type} String : {string_num} Note : {note_val} PalmMute : {palm_mute}")
-    return 0
+        print(f"Beat : {beat_type} String : {string_num} Note : {note_val} PalmMute : {palm_mute}")
+
+
+    return note_val, note_type, string_num, dummy // 322, palm_mute

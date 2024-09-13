@@ -1,0 +1,7 @@
+numpy == 1.26.4
+PyGuitarPro
+matplotlib
+--index-url https://download.pytorch.org/whl/cu124
+torch 
+torchvision 
+torchaudio 
