@@ -1,10 +1,11 @@
 """Defines parameters required for training and inference"""
 
 ################################ transformers #################################
-MODE            =   1  # 0: train, # 1 : eval, # 2 : both
-BACKUP          =   "dec_only_notes_15"
-SAVE            =   "dec_only_notes_15L"
-START_ID        =   9500
+MODE            =   2  # 0: train, # 1 : eval, # 2 : both
+BACKUP          =   "dec_only_notes_16"
+SAVE            =   "dec_only_notes_16A"
+START_ID        =   15922
+BOS_TRUE        =   1
 ########## Params ##############
 EPOCHS          =   1500
 VOCAB_SIZE      =   26420
@@ -20,7 +21,7 @@ STRIDE          =   1
 TRAINING        =   ["CB"]
 BATCH           =   950
 CONVERGENCE     =   0.0005
-TEMPERATURE     =   2.0
+TEMPERATURE     =   0.7
 
 EOS             =   26405
 BOS             =   26406
