@@ -11,6 +11,7 @@ from encoding import tokenizer_1
 from decoding import detokenizer_1
 from _decoder.decoder import DecoderAPE
 import config as cfg
+from testing import inference
 np.set_printoptions(threshold=sys.maxsize)
 
 if __name__ == '__main__':
@@ -152,15 +153,9 @@ if __name__ == '__main__':
         print(f"Loss : ', {checkpoint['loss'].item()}")
         print(f"Epochs : ', {checkpoint['epoch']}")
         decoder.eval()
-        dummy_np = np.full((1, cfg.MAX_SEQ_LENGTH), cfg.EOS, dtype = 'int32')
-        if cfg.BOS_TRUE == 0:
-            dummy_np[0, 1] = cfg.START_ID
-        else:
-            dummy_np[0, 0] = cfg.BOS
-            dummy_np[0, 1] = cfg.START_ID
-        dummy_in = torch.tensor(dummy_np).to(device)
-        dummy_in = decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask,
-                                     cfg.MAX_SEQ_LENGTH).cpu().numpy()
+
+        dummy_in = inference(device, decoder, embedding_layer, pos_enc, mask)
+
         noteval = []
         notetypeval = []
         stringnum = []
