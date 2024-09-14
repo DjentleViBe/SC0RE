@@ -6,12 +6,13 @@ import numpy as np
 import torch
 from torch import nn
 from preprocess import readgpro, guitarinfo, get_positional_encoding, create_dir
-from postprocess import plot, decoder_inference, makegpro
+from postprocess import plot, decoder_inference, makegpro, writegpro
 from encoding import tokenizer_1
 from decoding import detokenizer_1
 from _decoder.decoder import DecoderAPE
 import config as cfg
 from testing import inference
+import guitarpro as gp
 np.set_printoptions(threshold=sys.maxsize)
 
 if __name__ == '__main__':
@@ -156,18 +157,38 @@ if __name__ == '__main__':
 
         dummy_in = inference(device, decoder, embedding_layer, pos_enc, mask)
 
-        noteval = []
-        notetypeval = []
-        stringnum = []
-        beatval = []
-        palmval = []
-        for ind, dummy in enumerate(dummy_in[0]):
-            print(f"{ind + 1:02}", end=' ')
-            note, notetype, string, beat, palm = detokenizer_1(dummy)
-            noteval.append(note)
-            notetypeval.append(notetype)
-            stringnum.append(string)
-            beatval.append(beat)
-            palmval.append(palm)
-        makegpro(cfg.SAVE, noteval, notetypeval, stringnum, beatval, palmval)
+        m = 0
+        song = gp.models.Song()
+        song.title = cfg.SAVE
+        song.artist = "DjentleViBe"
+        song.tempo = 120  # Set the tempo
+        song.tracks[0].name = "Guitar"
+        song.tracks[0].channel.instrument = 30
+        song.tracks[0].strings[0].value = 58
+        song.tracks[0].strings[1].value = 53
+        song.tracks[0].strings[2].value = 49
+        song.tracks[0].strings[3].value = 44
+        song.tracks[0].strings[4].value = 39
+        song.tracks[0].strings[5].value = 32
+        song_collect = []
+
+        while m < cfg.TEST_TRIES:
+            noteval = []
+            notetypeval = []
+            stringnum = []
+            beatval = []
+            palmval = []
+
+            for ind, dummy in enumerate(dummy_in[m]):
+                print(f"{ind + 1:02}", end=' ')
+                note, notetype, string, beat, palm = detokenizer_1(dummy)
+                noteval.append(note)
+                notetypeval.append(notetype)
+                stringnum.append(string)
+                beatval.append(beat)
+                palmval.append(palm)
+            song_collect.append(makegpro(cfg.SAVE, noteval, stringnum, beatval, palmval))
+            song.tracks[0].measures.append(song_collect[m].tracks[0].measures[0])
+            m += 1
+        writegpro(cfg.SAVE, song)
     print("Finished")

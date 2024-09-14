@@ -67,7 +67,7 @@ def getnotetype(notetype):
     elif 69 <= notetype <= 82:
         return 1, notetype - 68
 
-def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
+def makegpro(titlename, noteval, stringnum, beatval, palmval):
     """Generate gpro file"""
     # read bend and tremolo templates
     song_trem_1 = gp.parse('./gprofiles/trem_1.gp5')
@@ -83,7 +83,7 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
     song = gp.models.Song()
 
     # Set the song's information
-    song.title = filename
+    song.title = titlename
     song.artist = "DjentleViBe"
     song.tempo = 120  # Set the tempo
     song.tracks[0].name = "Guitar"
@@ -142,6 +142,7 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
             continue
             
         elif BEND_NOTE_1 <= note <= BEND_NOTE_7:
+            """
             note_collect[l_val - 1].effect.isBend = True
             if note == BEND_NOTE_1:
                 note_collect[l_val - 1].effect.bend.type.value = 1
@@ -157,7 +158,7 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
                 note_collect[l_val - 1].effect.bend.type.value = 6
             elif note == BEND_NOTE_7:
                 note_collect[l_val - 1].effect.bend.type.value = 7
-            continue
+            continue"""
         else:
             beat_collect.append(gp.Beat(voice=voice))
             voice.beats.append(beat_collect[k_val])
@@ -192,7 +193,11 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
             beat_collect[k_val].notes.append(note_collect[l_val])
             k_val += 1
             l_val += 1
+    
+    return song
 
+def writegpro(filename, song):
+    """write gpro file to disk"""
     # Save the song to a Guitar Pro file
     with open("./RESULTS/" + filename + ".gp5", 'wb') as file:
         gp.write(song, file)

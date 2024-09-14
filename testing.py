@@ -16,13 +16,25 @@ def inference(device, decoder, embedding_layer, pos_enc, mask):
 
     if cfg.TEST_CRITERIA == 0:
         dummy_out = decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask,
-                                     cfg.MAX_SEQ_LENGTH)
+                                     cfg.MAX_SEQ_LENGTH).cpu().numpy()
     elif cfg.TEST_CRITERIA == 1:
-        for t in range (0, 100):
+        for t in range (0, cfg.TEST_TRIES):
             print(f"Testing -> {t}")
+            
             dummy_out = decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask,
-                                     cfg.MAX_SEQ_LENGTH)
+                                     cfg.MAX_SEQ_LENGTH).cpu().numpy()
+            #dummy_out[0][4] = 26416
             if np.any(dummy_out.cpu().numpy() > cfg.BEND_NOTE_1):
                 return dummy_out.cpu().numpy()
-
-    return dummy_out.cpu().numpy()
+    elif cfg.TEST_CRITERIA == 2:
+        dummy_out = np.zeros((cfg.TEST_TRIES, cfg.MAX_SEQ_LENGTH), dtype = 'int32')
+        t = 0
+        while t < cfg.TEST_TRIES:
+            print(f"Testing -> {t}")
+            dummy_out[t] = decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask,
+                                     cfg.MAX_SEQ_LENGTH).cpu().numpy()
+            if np.any(dummy_out[t] == 0):
+                print("0 detected")
+            else:
+                t += 1
+    return dummy_out

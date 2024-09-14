@@ -2,11 +2,12 @@
 
 ################################ transformers #################################
 MODE            =   1  # 0: train, # 1 : eval, # 2 : both
-BACKUP          =   "dec_only_notes_16"
-SAVE            =   "dec_only_notes_16A"
-START_ID        =   449
+BACKUP          =   "dec_only_notes_15"
+SAVE            =   "dec_only_notes_15V"
+START_ID        =   9500
 BOS_TRUE        =   1
-TEST_CRITERIA   =   1
+TEST_CRITERIA   =   2
+TEST_TRIES      =   10
 ########## Params ##############
 EPOCHS          =   1500
 VOCAB_SIZE      =   26420
@@ -40,4 +41,4 @@ TREM_BAR_3      =   26417
 TREM_BAR_4      =   26418
 TREM_BAR_5      =   26419
 #################################################################################
-MEASURE         =   16
+MEASURE         =   8
