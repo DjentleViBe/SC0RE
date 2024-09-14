@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as F
 import guitarpro as gp
+import math
 from config import (EOS, BOS, BARRE_NOTE, MEASURE, BEND_NOTE_1, BEND_NOTE_2, BEND_NOTE_3,
 BEND_NOTE_4, BEND_NOTE_5, BEND_NOTE_6, BEND_NOTE_7, TREM_BAR_1, TREM_BAR_2, TREM_BAR_3,
 TREM_BAR_4, TREM_BAR_5)
@@ -67,6 +68,13 @@ def getnotetype(notetype):
     elif 69 <= notetype <= 82:
         return 1, notetype - 68
 
+def adjustmeasure(beat_collect):
+    """calculate the total measure length"""
+    measure_length = 0
+    for b, beat_val in enumerate(beat_collect):
+        measure_length += 4 / getnotetype(beat_val)[0]
+    return math.ceil(measure_length)
+
 def makegpro(titlename, noteval, stringnum, beatval, palmval):
     """Generate gpro file"""
     # read bend and tremolo templates
@@ -88,7 +96,8 @@ def makegpro(titlename, noteval, stringnum, beatval, palmval):
     song.tempo = 120  # Set the tempo
     song.tracks[0].name = "Guitar"
     song.tracks[0].channel.instrument = 30
-    song.tracks[0].measures[0].timeSignature.numerator = MEASURE
+    
+    song.tracks[0].measures[0].timeSignature.numerator = adjustmeasure(beatval)
     song.tracks[0].strings[0].value = 58
     song.tracks[0].strings[1].value = 53
     song.tracks[0].strings[2].value = 49
