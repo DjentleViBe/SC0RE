@@ -69,6 +69,15 @@ def getnotetype(notetype):
 
 def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
     """Generate gpro file"""
+    # read bend and tremolo templates
+    song_trem_1 = gp.parse('./gprofiles/trem_1.gp5')
+    song_trem_2 = gp.parse('./gprofiles/trem_2.gp5')
+    song_trem_4 = gp.parse('./gprofiles/trem_4.gp5')
+    song_trem_5 = gp.parse('./gprofiles/trem_5.gp5')
+    trem1_beat = song_trem_1.tracks[0].measures[0].voices[0].beats[0]
+    trem2_beat = song_trem_2.tracks[0].measures[0].voices[0].beats[0]
+    trem4_beat = song_trem_4.tracks[0].measures[0].voices[0].beats[0]
+    trem5_beat = song_trem_5.tracks[0].measures[0].voices[0].beats[0]
 
     # Create a new Guitar Pro song
     song = gp.models.Song()
@@ -95,7 +104,44 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
     beat_collect = []
     note_collect = []
     for n, note in enumerate(noteval):
-        if BEND_NOTE_1 <= note <= BEND_NOTE_7:
+
+        if note == EOS:
+            # print("-----EOS-----")
+            continue
+        elif note == BOS:
+            # print("-----BOS-----")
+            continue
+        elif note == BARRE_NOTE:
+            l_val -= 1
+            # print("-----Barred Note-----")
+        elif TREM_BAR_1 <= note <= TREM_BAR_5:
+            beat_collect[l_val - 1].effect.isBend = True
+            
+            if note == TREM_BAR_1:
+                trem1_beat.notes[0].value = note_collect[l_val - 1].value
+                trem1_beat.notes[0].string = note_collect[l_val - 1].string
+                trem1_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = trem1_beat
+            elif note == TREM_BAR_2:
+                trem2_beat.notes[0].value = note_collect[l_val - 1].value
+                trem2_beat.notes[0].string = note_collect[l_val - 1].string
+                trem2_beat.notes[0].beat.duration.value = beat_collect[l_val - 1].duration.value
+                voice.beats[l_val - 1] = trem2_beat
+            elif note == TREM_BAR_3:
+                beat_collect[l_val - 1].effect.tremoloBar.type = 3
+            elif note == TREM_BAR_4:
+                trem4_beat.notes[0].value = note_collect[l_val - 1].value
+                trem4_beat.notes[0].string = note_collect[l_val - 1].string
+                trem4_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = trem4_beat
+            elif note == TREM_BAR_5:
+                trem5_beat.notes[0].value = note_collect[l_val - 1].value
+                trem5_beat.notes[0].string = note_collect[l_val - 1].string
+                trem5_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = trem5_beat
+            continue
+            
+        elif BEND_NOTE_1 <= note <= BEND_NOTE_7:
             note_collect[l_val - 1].effect.isBend = True
             if note == BEND_NOTE_1:
                 note_collect[l_val - 1].effect.bend.type.value = 1
@@ -111,29 +157,7 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
                 note_collect[l_val - 1].effect.bend.type.value = 6
             elif note == BEND_NOTE_7:
                 note_collect[l_val - 1].effect.bend.type.value = 7
-
-        if TREM_BAR_1 <= note <= TREM_BAR_5:
-            note_collect[l_val - 1].effect.isTremoloBar = True
-            if note == TREM_BAR_1:
-                beat_collect[l_val - 1].effect.tremoloBar.type = 1
-            elif note == TREM_BAR_2:
-                beat_collect[l_val - 1].effect.tremoloBar.type = 2
-            elif note == TREM_BAR_3:
-                beat_collect[l_val - 1].effect.tremoloBar.type = 3
-            elif note == TREM_BAR_4:
-                beat_collect[l_val - 1].effect.tremoloBar.type = 4
-            elif note == TREM_BAR_5:
-                beat_collect[l_val - 1].effect.tremoloBar.type = 5
-
-        if note == EOS:
-            # print("-----EOS-----")
             continue
-        elif note == BOS:
-            # print("-----BOS-----")
-            continue
-        elif note == BARRE_NOTE:
-            l_val -= 1
-            # print("-----Barred Note-----")
         else:
             beat_collect.append(gp.Beat(voice=voice))
             voice.beats.append(beat_collect[k_val])
