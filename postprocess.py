@@ -4,7 +4,7 @@ import torch
 import torch.nn.functional as F
 import guitarpro as gp
 import math
-from config import (EOS, BOS, BARRE_NOTE, MEASURE, BEND_NOTE_1, BEND_NOTE_2, BEND_NOTE_3,
+from config import (MAX_SEQ_LENGTH, EOS, BOS, BARRE_NOTE, MEASURE, BEND_NOTE_1, BEND_NOTE_2, BEND_NOTE_3,
 BEND_NOTE_4, BEND_NOTE_5, BEND_NOTE_6, BEND_NOTE_7, TREM_BAR_1, TREM_BAR_2, TREM_BAR_3,
 TREM_BAR_4, TREM_BAR_5)
 
@@ -71,7 +71,7 @@ def getnotetype(notetype):
 def adjustmeasure(beat_collect):
     """calculate the total measure length"""
     measure_length = 0
-    for b, beat_val in enumerate(beat_collect):
+    for b, beat_val in enumerate(beat_collect[1:]):
         measure_length += 4 / getnotetype(beat_val)[0]
     return math.ceil(measure_length)
 
