@@ -1,4 +1,7 @@
 .venv
 __pycache__
 .DS_Store
+*.gp5
+*.png
+*.pth
 RESULTS
