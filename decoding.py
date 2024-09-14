@@ -1,5 +1,5 @@
 """Decoding results"""
-from config import EOS, BOS, BARRE_NOTE
+from config import EOS, BOS, BARRE_NOTE, BEND_NOTE_1
 
 DEMAPPING_BEAT_TYPE = {
     1:   'Base---------------',
@@ -55,6 +55,9 @@ def detokenizer_1(dummy):
     elif dummy == BARRE_NOTE:
         print("--------Barred Note--------")
         note_val = BARRE_NOTE
+    elif dummy >= BEND_NOTE_1:
+        print("-------Accent----------")
+        note_val = dummy
     else:
         palm_mute = False
         beat_type = demapping_beat(dummy // 322)

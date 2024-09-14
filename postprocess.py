@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as F
 import guitarpro as gp
-from config import (EOS, BOS, BARRE_NOTE, MEASURE, BEND_NOTE_1, BEND_NOTE_2, BEND_NOTE_3,
+import math
+from config import (MAX_SEQ_LENGTH, EOS, BOS, BARRE_NOTE, MEASURE, BEND_NOTE_1, BEND_NOTE_2, BEND_NOTE_3,
 BEND_NOTE_4, BEND_NOTE_5, BEND_NOTE_6, BEND_NOTE_7, TREM_BAR_1, TREM_BAR_2, TREM_BAR_3,
 TREM_BAR_4, TREM_BAR_5)
 
@@ -62,24 +63,41 @@ def getnotetype(notetype):
         return 8, notetype - 28
     elif 41 <= notetype <= 54:
         return 4, notetype - 40
-    elif 54 <= notetype < 68:
-        return 2, notetype - 55
-    else:
+    elif 55 <= notetype <= 68:
+        return 2, notetype - 54
+    elif 69 <= notetype <= 82:
         return 1, notetype - 68
 
-def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
+def adjustmeasure(beat_collect):
+    """calculate the total measure length"""
+    measure_length = 0
+    for b, beat_val in enumerate(beat_collect[1:]):
+        measure_length += 4 / getnotetype(beat_val)[0]
+    return math.ceil(measure_length)
+
+def makegpro(titlename, noteval, stringnum, beatval, palmval):
     """Generate gpro file"""
+    # read bend and tremolo templates
+    song_trem_1 = gp.parse('./gprofiles/trem_1.gp5')
+    song_trem_2 = gp.parse('./gprofiles/trem_2.gp5')
+    song_trem_4 = gp.parse('./gprofiles/trem_4.gp5')
+    song_trem_5 = gp.parse('./gprofiles/trem_5.gp5')
+    trem1_beat = song_trem_1.tracks[0].measures[0].voices[0].beats[0]
+    trem2_beat = song_trem_2.tracks[0].measures[0].voices[0].beats[0]
+    trem4_beat = song_trem_4.tracks[0].measures[0].voices[0].beats[0]
+    trem5_beat = song_trem_5.tracks[0].measures[0].voices[0].beats[0]
 
     # Create a new Guitar Pro song
     song = gp.models.Song()
 
     # Set the song's information
-    song.title = filename
+    song.title = titlename
     song.artist = "DjentleViBe"
     song.tempo = 120  # Set the tempo
     song.tracks[0].name = "Guitar"
     song.tracks[0].channel.instrument = 30
-    song.tracks[0].measures[0].timeSignature.numerator = MEASURE
+    
+    song.tracks[0].measures[0].timeSignature.numerator = adjustmeasure(beatval)
     song.tracks[0].strings[0].value = 58
     song.tracks[0].strings[1].value = 53
     song.tracks[0].strings[2].value = 49
@@ -95,7 +113,45 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
     beat_collect = []
     note_collect = []
     for n, note in enumerate(noteval):
-        if BEND_NOTE_1 <= note <= BEND_NOTE_7:
+
+        if note == EOS:
+            # print("-----EOS-----")
+            continue
+        elif note == BOS:
+            # print("-----BOS-----")
+            continue
+        elif note == BARRE_NOTE:
+            l_val -= 1
+            # print("-----Barred Note-----")
+        elif TREM_BAR_1 <= note <= TREM_BAR_5:
+            beat_collect[l_val - 1].effect.isBend = True
+            
+            if note == TREM_BAR_1:
+                trem1_beat.notes[0].value = note_collect[l_val - 1].value
+                trem1_beat.notes[0].string = note_collect[l_val - 1].string
+                trem1_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = trem1_beat
+            elif note == TREM_BAR_2:
+                trem2_beat.notes[0].value = note_collect[l_val - 1].value
+                trem2_beat.notes[0].string = note_collect[l_val - 1].string
+                trem2_beat.notes[0].beat.duration.value = beat_collect[l_val - 1].duration.value
+                voice.beats[l_val - 1] = trem2_beat
+            elif note == TREM_BAR_3:
+                beat_collect[l_val - 1].effect.tremoloBar.type = 3
+            elif note == TREM_BAR_4:
+                trem4_beat.notes[0].value = note_collect[l_val - 1].value
+                trem4_beat.notes[0].string = note_collect[l_val - 1].string
+                trem4_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = trem4_beat
+            elif note == TREM_BAR_5:
+                trem5_beat.notes[0].value = note_collect[l_val - 1].value
+                trem5_beat.notes[0].string = note_collect[l_val - 1].string
+                trem5_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = trem5_beat
+            continue
+            
+        elif BEND_NOTE_1 <= note <= BEND_NOTE_7:
+            """
             note_collect[l_val - 1].effect.isBend = True
             if note == BEND_NOTE_1:
                 note_collect[l_val - 1].effect.bend.type.value = 1
@@ -111,29 +167,7 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
                 note_collect[l_val - 1].effect.bend.type.value = 6
             elif note == BEND_NOTE_7:
                 note_collect[l_val - 1].effect.bend.type.value = 7
-
-        if TREM_BAR_1 <= note <= TREM_BAR_5:
-            note_collect[l_val - 1].effect.isTremoloBar = True
-            if note == TREM_BAR_1:
-                beat_collect[l_val - 1].effect.tremoloBar.type = 1
-            elif note == TREM_BAR_2:
-                beat_collect[l_val - 1].effect.tremoloBar.type = 2
-            elif note == TREM_BAR_3:
-                beat_collect[l_val - 1].effect.tremoloBar.type = 3
-            elif note == TREM_BAR_4:
-                beat_collect[l_val - 1].effect.tremoloBar.type = 4
-            elif note == TREM_BAR_5:
-                beat_collect[l_val - 1].effect.tremoloBar.type = 5
-
-        if note == EOS:
-            # print("-----EOS-----")
-            continue
-        elif note == BOS:
-            # print("-----BOS-----")
-            continue
-        elif note == BARRE_NOTE:
-            l_val -= 1
-            # print("-----Barred Note-----")
+            continue"""
         else:
             beat_collect.append(gp.Beat(voice=voice))
             voice.beats.append(beat_collect[k_val])
@@ -168,7 +202,11 @@ def makegpro(filename, noteval, notetypeval, stringnum, beatval, palmval):
             beat_collect[k_val].notes.append(note_collect[l_val])
             k_val += 1
             l_val += 1
+    
+    return song
 
+def writegpro(filename, song):
+    """write gpro file to disk"""
     # Save the song to a Guitar Pro file
     with open("./RESULTS/" + filename + ".gp5", 'wb') as file:
         gp.write(song, file)
