@@ -143,7 +143,7 @@ if __name__ == '__main__':
             if loss.item() < cfg.CONVERGENCE:
                 break
         
-        with open('./RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP +'.csv', mode='w', newline='') as lossfile:
+        with open('./RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP + '.csv', mode='w', newline='') as lossfile:
             writer = csv.writer(lossfile)
             writer.writerows([[value] for value in lossplot])
         checkpoint = {
