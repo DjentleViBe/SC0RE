@@ -2,6 +2,7 @@
 import os
 import sys
 import shutil
+import csv
 import numpy as np
 import torch
 from torch import nn
@@ -141,7 +142,10 @@ if __name__ == '__main__':
 
             if loss.item() < cfg.CONVERGENCE:
                 break
-
+        
+        with open('./RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP +'.csv', mode='w', newline='') as lossfile:
+            writer = csv.writer(lossfile)
+            writer.writerows(lossplot)
         checkpoint = {
         'model_state_dict': decoder.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
