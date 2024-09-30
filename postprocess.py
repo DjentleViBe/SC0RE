@@ -4,9 +4,9 @@ import torch
 import torch.nn.functional as F
 import guitarpro as gp
 import math
-from config import (MAX_SEQ_LENGTH, EOS, BOS, BARRE_NOTE, MEASURE, BEND_NOTE_1, BEND_NOTE_2, BEND_NOTE_3,
+from config import (BACKUP, MAX_SEQ_LENGTH, EOS, BOS, BARRE_NOTE, MEASURE, BEND_NOTE_1, BEND_NOTE_2, BEND_NOTE_3,
 BEND_NOTE_4, BEND_NOTE_5, BEND_NOTE_6, BEND_NOTE_7, TREM_BAR_1, TREM_BAR_2, TREM_BAR_3,
-TREM_BAR_4, TREM_BAR_5)
+TREM_BAR_4, TREM_BAR_5, DEAD_NOTE)
 
 DEMAPPING_BEAT_DETYPE = {
     'Base---------------' : 1,
@@ -122,6 +122,9 @@ def makegpro(titlename, noteval, stringnum, beatval, palmval):
             continue
         elif note == BARRE_NOTE:
             l_val -= 1
+        elif note == DEAD_NOTE:
+            note_collect[l_val - 1].type.name == 'dead'
+            l_val += 1
             # print("-----Barred Note-----")
         elif TREM_BAR_1 <= note <= TREM_BAR_5:
             beat_collect[l_val - 1].effect.isBend = True
@@ -208,5 +211,5 @@ def makegpro(titlename, noteval, stringnum, beatval, palmval):
 def writegpro(filename, song):
     """write gpro file to disk"""
     # Save the song to a Guitar Pro file
-    with open("./RESULTS/" + filename + ".gp5", 'wb') as file:
+    with open("./RESULTS/" + "/" + BACKUP + "/" + filename + ".gp5", 'wb') as file:
         gp.write(song, file)

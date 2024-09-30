@@ -2,6 +2,7 @@
 import os
 import sys
 import shutil
+import csv
 import numpy as np
 import torch
 from torch import nn
@@ -17,6 +18,7 @@ np.set_printoptions(threshold=sys.maxsize)
 
 if __name__ == '__main__':
     create_dir('./RESULTS/')
+    create_dir('./RESULTS/' + cfg.BACKUP)
 
     if os.name == 'posix':
         DEVICE_TYPE     =   "mps"
@@ -35,7 +37,7 @@ if __name__ == '__main__':
     mask = torch.triu(mask, diagonal = 1).to(device)
 
     if cfg.MODE in (0, 2):
-        shutil.copy("./config.py", "./RESULTS/" + cfg.BACKUP + ".py")
+        shutil.copy("./config.py", "./RESULTS/" + cfg.BACKUP + "/" + cfg.BACKUP + ".py")
         training_src_encoder_1 = np.zeros((cfg.BATCH * cfg.MAX_SEQ_LENGTH), dtype = 'int32')
 
         GPROFOLDER = './gprofiles/'
@@ -82,6 +84,9 @@ if __name__ == '__main__':
                                         elif note.effect.bend.type.value == 7:
                                             training_src_encoder_1[L] = cfg.BEND_NOTE_7
                                         L += 1
+                                    
+                                    if note.type.name == 'dead':
+                                        training_src_encoder_1[L - 1] = cfg.DEAD_NOTE
 
                                     if beat.effect.isTremoloBar is True:
                                         if beat.effect.tremoloBar.type.value == 1:
@@ -137,18 +142,21 @@ if __name__ == '__main__':
 
             if loss.item() < cfg.CONVERGENCE:
                 break
-
+        
+        with open('./RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP + '.csv', mode='w', newline='') as lossfile:
+            writer = csv.writer(lossfile)
+            writer.writerows([[value] for value in lossplot])
         checkpoint = {
         'model_state_dict': decoder.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
         'epoch': cfg.EPOCHS,  # Optionally save the epoch number
         'loss': loss     # Optionally save the loss value
         }
-        torch.save(checkpoint, './RESULTS/'+ cfg.BACKUP +'.pth')
-        plot(lossplot, './RESULTS/' + cfg.BACKUP + '.png')
+        torch.save(checkpoint, './RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP +'.pth')
+        plot(lossplot, './RESULTS/' + cfg.BACKUP + "/" + cfg.BACKUP + '.png')
 
     if cfg.MODE in (1, 2):
-        checkpoint = torch.load('./RESULTS/'+ cfg.BACKUP +'.pth')
+        checkpoint = torch.load('./RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP +'.pth')
         decoder.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         print(f"Loss : ', {checkpoint['loss'].item()}")
