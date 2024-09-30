@@ -82,6 +82,9 @@ if __name__ == '__main__':
                                         elif note.effect.bend.type.value == 7:
                                             training_src_encoder_1[L] = cfg.BEND_NOTE_7
                                         L += 1
+                                    
+                                    if note.type.name == 'dead':
+                                        training_src_encoder_1[L - 1] = cfg.DEAD_NOTE
 
                                     if beat.effect.isTremoloBar is True:
                                         if beat.effect.tremoloBar.type.value == 1:
