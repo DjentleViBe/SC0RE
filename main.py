@@ -145,7 +145,7 @@ if __name__ == '__main__':
         
         with open('./RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP +'.csv', mode='w', newline='') as lossfile:
             writer = csv.writer(lossfile)
-            writer.writerows(lossplot)
+            writer.writerows([[value] for value in lossplot])
         checkpoint = {
         'model_state_dict': decoder.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
