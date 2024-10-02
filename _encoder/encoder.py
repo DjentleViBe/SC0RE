@@ -5,7 +5,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-def scaled_dot_product(q_val, k_val, v_val, mask):
+def scaled_dot_product(q_val, k_val, v_val, mask, rel_pos_enc):
     """Required for attention
     q_val : what am I looking for
     k_val : what do I have to offer
@@ -20,6 +20,11 @@ def scaled_dot_product(q_val, k_val, v_val, mask):
     # 30 x 8 x 10 x 64 matmul 30 x 8 x 64 x 10 = 30 x 8 x 10 x 10 ( pre-cursor
     # to self attention matrix)
     scaled = (torch.matmul(q_val, k_val.transpose(-1, -2)) / math.sqrt(d_k))
+    
+    # Add relative positional encoding to attention scores
+    scaled += torch.einsum('bhqd,qkd->bhqk', q_val, rel_pos_enc.squeeze(0))  # Add relative positional bias
+
+    
     if mask is not None:
         scaled += mask
     # to get probabilities apply softmax
@@ -33,6 +38,7 @@ class MultiHeadAttentionAPE(nn.Module):
     """
     def __init__(self, device, d_model, seq_length, num_heads) -> None:
         super().__init__()
+        self.device = device
         self.d_model = d_model  # 512
         self.num_heads = num_heads # 8
         self.head_dim = d_model // num_heads # 64
@@ -41,6 +47,23 @@ class MultiHeadAttentionAPE(nn.Module):
         self.qkv_layer.to(device)
         self.linear_layer = nn.Linear(d_model, d_model)
         self.linear_layer.to(device)
+        # Learnable relative positional embedding
+        self.relative_positional_encoding = nn.Embedding(2 * seq_length - 1, self.head_dim).to(device)
+
+    
+    def relative_position_encoding(self, seq_length, max_len, device):
+        # Generate the relative distance matrix
+        relative_pos_enc = torch.zeros(seq_length, seq_length, dtype=torch.long).to(device)
+        for i in range(seq_length):
+            for j in range(seq_length):
+                relative_pos_enc[i, j] = j - i  # Compute relative positions
+        
+        # Shift the relative positions to be non-negative for embedding indexing
+        max_relative_position = max_len - 1  # max_len is defined by the size of your embedding layer
+        relative_pos_enc += max_relative_position  # Shift to have positive values for indexing
+
+        # Return relative positional encoding with an extra batch dimension
+        return relative_pos_enc.unsqueeze(0)  # Shape: (1, seq_length, seq_length) 
 
     def forward(self, x_val, mask=None):
         """Forward layer
@@ -56,8 +79,15 @@ class MultiHeadAttentionAPE(nn.Module):
         # break tensor into respective parts, each are 30 x 8 x 10 x 12
         # batch x head x seq x (3 * (embed / head))
         q_val, k_val, v_val = qkv.chunk(3, dim = -1)
+
+        # Compute relative positional encodings
+        relative_positions = self.relative_position_encoding(sequence_length, self.relative_positional_encoding.num_embeddings // 2 + 1, self.device)
+
+         # Get the relative positional embeddings using the relative position matrix
+        rel_pos_enc = self.relative_positional_encoding(relative_positions)  # Shape: (1, seq_length, seq_length, head_dim)
+
         # 30 x 8 x 10 x 32, 30 x 8 x 10 x 10
-        values, _ = scaled_dot_product(q_val, k_val, v_val, mask)
+        values, _ = scaled_dot_product(q_val, k_val, v_val, mask, rel_pos_enc)
         # 30 x 10 x 32
         values = values.reshape(batch_size, sequence_length, self.num_heads * self.head_dim)
         # 30 x 10 x 1
