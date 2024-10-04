@@ -106,6 +106,10 @@ if __name__ == '__main__':
 
         training_src_encoder_1 = training_src_encoder_1.reshape(cfg.BATCH, cfg.MAX_SEQ_LENGTH)
         training_tgt_notes = training_src_encoder_1.copy().astype(np.int64)
+        # Shift the sequence by one position
+        training_tgt_notes = np.roll(training_tgt_notes, shift=-1, axis=1)
+        # set last token to EOS
+        training_tgt_notes[:, -1] = cfg.EOS
         print("Source")
         print(f"{training_src_encoder_1}")
 
