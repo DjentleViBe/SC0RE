@@ -137,7 +137,8 @@ def makegpro(titlename, noteval, stringnum, beatval, palmval):
             # print("-----BOS-----")
             continue
         elif note == BARRE_NOTE:
-            l_val -= 1
+            if l_val != 0:
+                l_val -= 1
         elif note == DEAD_NOTE:
             note_collect[l_val - 1].type.name == 'dead'
             l_val += 1
