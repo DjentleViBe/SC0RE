@@ -36,7 +36,7 @@ if __name__ == '__main__':
     mask = torch.full([NUM_PATCH, NUM_PATCH], float('-inf'))
     mask = torch.triu(mask, diagonal = 1).to(device)
 
-    if cfg.MODE in (0, 2):
+    if cfg.MODE in (0, 2, 3):
         shutil.copy("./config.py", "./RESULTS/" + cfg.BACKUP + "/" + cfg.BACKUP + ".py")
         training_src_encoder_1 = np.zeros((cfg.BATCH * cfg.MAX_SEQ_LENGTH), dtype = 'int32')
 
@@ -119,6 +119,14 @@ if __name__ == '__main__':
         token_ids = torch.tensor(training_src_encoder_1).to(device)
         target = torch.from_numpy(training_tgt_notes).to(device)
 
+        if cfg.MODE == 3:
+            print("Loading saved file", cfg.SAVE)
+            checkpoint = torch.load('./RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP +'.pth')
+            decoder.load_state_dict(checkpoint['model_state_dict'])
+            optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+            embedding_layer.load_state_dict(checkpoint['embedding_state_dict'])
+            ITERATION = checkpoint['epoch']
+
         while ITERATION <= cfg.EPOCHS:
             decoder.train()
 
@@ -145,6 +153,17 @@ if __name__ == '__main__':
 
             if loss.item() < cfg.CONVERGENCE:
                 break
+
+            if ITERATION % cfg.SAVE_EVERY == 0:
+                checkpoint = {
+                'model_state_dict': decoder.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'embedding_state_dict': embedding_layer.state_dict(),
+                'epoch': ITERATION,  # Optionally save the epoch number
+                'loss': loss     # Optionally save the loss value
+                }
+                torch.save(checkpoint, './RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP +'.pth')
+                print("Checkpoint saved")
         
         with open('./RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP + '.csv', mode='w', newline='') as lossfile:
             writer = csv.writer(lossfile)
@@ -152,6 +171,7 @@ if __name__ == '__main__':
         checkpoint = {
         'model_state_dict': decoder.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
+        'embedding_state_dict': embedding_layer.state_dict(),
         'epoch': cfg.EPOCHS,  # Optionally save the epoch number
         'loss': loss     # Optionally save the loss value
         }
