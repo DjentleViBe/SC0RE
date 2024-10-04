@@ -103,15 +103,13 @@ if __name__ == '__main__':
 
                             training_src_encoder_1[L] = cfg.EOS
                             L += 1
-
+        training_tgt_decoder_1 = training_src_encoder_1.copy().astype(np.int64)
         training_src_encoder_1 = training_src_encoder_1.reshape(cfg.BATCH, cfg.MAX_SEQ_LENGTH)
-        training_tgt_notes = training_src_encoder_1.copy().astype(np.int64)
-        # Shift the sequence by one position
-        training_tgt_notes = np.roll(training_tgt_notes, shift=-1, axis=1)
-        # set last token to EOS
-        training_tgt_notes[:, -1] = cfg.EOS
+        training_tgt_notes = np.roll(training_tgt_decoder_1, shift=-1)
+        training_tgt_notes = training_tgt_notes.reshape(cfg.BATCH, cfg.MAX_SEQ_LENGTH)
+        del training_tgt_decoder_1
         print("Source")
-        print(f"{training_src_encoder_1}")
+        print(f"{training_tgt_notes}")
 
         ITERATION = 0
         criterion = torch.nn.MSELoss()
@@ -131,11 +129,12 @@ if __name__ == '__main__':
             logits = decoder(input_embeddings, mask)
             # Flatten logits to (batch_size * seq_length, d_vocab)
             logits = logits.view(-1, cfg.VOCAB_SIZE)
-            scaled_logits = logits / cfg.TEMPERATURE
+            
+            # scaled_logits = logits / cfg.TEMPERATURE
 
             target = target.view(-1)
 
-            loss = loss_fn(scaled_logits, target)
+            loss = loss_fn(logits, target)
 
             print(f"{ITERATION + 1} : {loss.item()}")
             loss.backward()
