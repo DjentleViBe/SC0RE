@@ -3,6 +3,7 @@ import config as cfg
 from postprocess import decoder_inference
 import torch
 import numpy as np
+from config import BARRE_NOTE
 
 def inference(device, decoder, embedding_layer, pos_enc, mask):
     """Run inference"""
@@ -47,7 +48,8 @@ def inference(device, decoder, embedding_layer, pos_enc, mask):
             if np.any(dummy_out[t] == 0):
                 print("0 detected")
             else:
-                dummy_in[0, 1] = dummy_out[t][-1]
+                if dummy_out[t][-1] < BARRE_NOTE:
+                    dummy_in[0, 1] = dummy_out[t][-1]
                 t += 1
 
     return dummy_out
