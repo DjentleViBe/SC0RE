@@ -128,7 +128,7 @@ if __name__ == '__main__':
             optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
             embedding_layer.load_state_dict(checkpoint['embedding_state_dict'])
             ITERATION = checkpoint['epoch']
-
+        print(cfg.EPOCHS)
         while ITERATION <= cfg.EPOCHS:
             decoder.train()
 
@@ -156,6 +156,7 @@ if __name__ == '__main__':
             lossplot.append(loss.item())
 
             if loss.item() < cfg.CONVERGENCE:
+                print("Convergence criteria reached!")
                 break
 
             if ITERATION % cfg.SAVE_EVERY == 0:
@@ -169,14 +170,14 @@ if __name__ == '__main__':
                 torch.save(checkpoint, './RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP +'.pth')
                 print("Checkpoint saved")
         
-        with open('./RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP + '.csv', mode='w', newline='') as lossfile:
+        with open('./RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP + '.csv', mode='a', newline='') as lossfile:
             writer = csv.writer(lossfile)
             writer.writerows([[value] for value in lossplot])
         checkpoint = {
         'model_state_dict': decoder.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
         'embedding_state_dict': embedding_layer.state_dict(),
-        'epoch': cfg.EPOCHS,  # Optionally save the epoch number
+        'epoch': ITERATION,  # Optionally save the epoch number
         'loss': loss     # Optionally save the loss value
         }
         torch.save(checkpoint, './RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP +'.pth')
