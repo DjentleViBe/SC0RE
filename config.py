@@ -1,30 +1,33 @@
 """Defines parameters required for training and inference"""
 
 ################################ transformers #################################
-MODE            =   3  # 0: train, # 1 : eval, # 2 : both # 3 : load from
-BACKUP          =   "dec_only_notes_2_Mac"
-SAVE            =   "dec_only_notes_2A_Mac"
-START_ID        =   9430
+MODE            =   0  # 0: train, # 1 : eval, # 2 : both # 3 : load from
+BACKUP          =   "dec_only_notes_3_Mac"
+SAVE            =   "dec_only_notes_3A_Mac"
+START_ID        =   9460
 BOS_TRUE        =   1
+EOS_TRUE        =   0
 TEST_CRITERIA   =   2
 TEST_TRIES      =   10
 ########## Params ##############
-EPOCHS          =   300
-SAVE_EVERY      =   10
+EPOCHS          =   1500
+SAVE_EVERY      =   100
 VOCAB_SIZE      =   26421
 FFN_HIDDEN      =   2048
 MAX_SEQ_LENGTH  =   12
-NUM_HEADS       =   4
+NUM_HEADS       =   2
 DROP_PROB       =   0.3
-NUM_LAYERS      =   4
+NUM_LAYERS      =   2
 D_MODEL         =   720
+SCHEDULER       =   0
+SCHEDULER_SIZE  =   30
 LEARNING_RATE   =   0.0001
 PATCH           =   1
 STRIDE          =   1
 TRAINING        =   ["CB"]
-BATCH           =   182
+BATCH           =   156
 CONVERGENCE     =   0.0005
-TEMPERATURE     =   2.0
+TEMPERATURE     =   0.7
 
 EOS             =   26405
 BOS             =   26406
