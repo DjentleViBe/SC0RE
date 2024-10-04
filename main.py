@@ -17,8 +17,6 @@ import guitarpro as gp
 np.set_printoptions(threshold=sys.maxsize)
 
 if __name__ == '__main__':
-    create_dir('./RESULTS/')
-    create_dir('./RESULTS/' + cfg.BACKUP)
 
     if os.name == 'posix':
         DEVICE_TYPE     =   "mps"
@@ -37,6 +35,8 @@ if __name__ == '__main__':
     mask = torch.triu(mask, diagonal = 1).to(device)
 
     if cfg.MODE in (0, 2, 3):
+        create_dir('./RESULTS/')
+        create_dir('./RESULTS/' + cfg.BACKUP)
         shutil.copy("./config.py", "./RESULTS/" + cfg.BACKUP + "/" + cfg.BACKUP + ".py")
         training_src_encoder_1 = np.zeros((cfg.BATCH * cfg.MAX_SEQ_LENGTH), dtype = 'int32')
 
