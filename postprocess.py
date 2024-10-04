@@ -87,6 +87,21 @@ def makegpro(titlename, noteval, stringnum, beatval, palmval):
     trem4_beat = song_trem_4.tracks[0].measures[0].voices[0].beats[0]
     trem5_beat = song_trem_5.tracks[0].measures[0].voices[0].beats[0]
 
+    song_bend_1 = gp.parse('./gprofiles/bend_1.gp5')
+    song_bend_2 = gp.parse('./gprofiles/bend_2.gp5')
+    song_bend_3 = gp.parse('./gprofiles/bend_3.gp5')
+    song_bend_4 = gp.parse('./gprofiles/bend_4.gp5')
+    song_bend_5 = gp.parse('./gprofiles/bend_5.gp5')
+    song_bend_6 = gp.parse('./gprofiles/bend_6.gp5')
+    song_bend_7 = gp.parse('./gprofiles/bend_7.gp5')
+    bend1_beat = song_bend_1.tracks[0].measures[0].voices[0].beats[0]
+    bend2_beat = song_bend_2.tracks[0].measures[0].voices[0].beats[1]
+    bend3_beat = song_bend_3.tracks[0].measures[0].voices[0].beats[0]
+    bend4_beat = song_bend_4.tracks[0].measures[0].voices[0].beats[1]
+    bend5_beat = song_bend_5.tracks[0].measures[0].voices[0].beats[0]
+    bend6_beat = song_bend_6.tracks[0].measures[0].voices[0].beats[0]
+    bend7_beat = song_bend_7.tracks[0].measures[0].voices[0].beats[0]
+
     # Create a new Guitar Pro song
     song = gp.models.Song()
 
@@ -154,23 +169,43 @@ def makegpro(titlename, noteval, stringnum, beatval, palmval):
             continue
             
         elif BEND_NOTE_1 <= note <= BEND_NOTE_7:
-            """
-            note_collect[l_val - 1].effect.isBend = True
+            beat_collect[l_val - 1].effect.isBend = True
             if note == BEND_NOTE_1:
-                note_collect[l_val - 1].effect.bend.type.value = 1
+                bend1_beat.notes[0].value = note_collect[l_val - 1].value
+                bend1_beat.notes[0].string = note_collect[l_val - 1].string
+                bend1_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = bend1_beat
             elif note == BEND_NOTE_2:
-                note_collect[l_val - 1].effect.bend.type.value = 2
+                bend2_beat.notes[0].value = note_collect[l_val - 1].value
+                bend2_beat.notes[0].string = note_collect[l_val - 1].string
+                bend2_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = bend2_beat
             elif note == BEND_NOTE_3:
-                note_collect[l_val - 1].effect.bend.type.value = 3
+                bend3_beat.notes[0].value = note_collect[l_val - 1].value
+                bend3_beat.notes[0].string = note_collect[l_val - 1].string
+                bend3_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = bend3_beat
             elif note == BEND_NOTE_4:
-                note_collect[l_val - 1].effect.bend.type.value = 4
+                bend4_beat.notes[0].value = note_collect[l_val - 1].value
+                bend4_beat.notes[0].string = note_collect[l_val - 1].string
+                bend4_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = bend4_beat
             elif note == BEND_NOTE_5:
-                note_collect[l_val - 1].effect.bend.type.value = 5
+                bend5_beat.notes[0].value = note_collect[l_val - 1].value
+                bend5_beat.notes[0].string = note_collect[l_val - 1].string
+                bend5_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = bend5_beat
             elif note == BEND_NOTE_6:
-                note_collect[l_val - 1].effect.bend.type.value = 6
+                bend6_beat.notes[0].value = note_collect[l_val - 1].value
+                bend6_beat.notes[0].string = note_collect[l_val - 1].string
+                bend6_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = bend6_beat
             elif note == BEND_NOTE_7:
-                note_collect[l_val - 1].effect.bend.type.value = 7
-            continue"""
+                bend7_beat.notes[0].value = note_collect[l_val - 1].value
+                bend7_beat.notes[0].string = note_collect[l_val - 1].string
+                bend7_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = bend7_beat
+            continue
         else:
             beat_collect.append(gp.Beat(voice=voice))
             voice.beats.append(beat_collect[k_val])
