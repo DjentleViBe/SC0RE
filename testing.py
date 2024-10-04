@@ -37,4 +37,17 @@ def inference(device, decoder, embedding_layer, pos_enc, mask):
                 print("0 detected")
             else:
                 t += 1
+    elif cfg.TEST_CRITERIA == 3:
+        dummy_out = np.zeros((cfg.TEST_TRIES, cfg.MAX_SEQ_LENGTH), dtype = 'int32')
+        t = 0
+        while t < cfg.TEST_TRIES:
+            print(f"Testing -> {t}")
+            dummy_out[t] = decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask,
+                                     cfg.MAX_SEQ_LENGTH).cpu().numpy()
+            if np.any(dummy_out[t] == 0):
+                print("0 detected")
+            else:
+                dummy_in[0, 1] = dummy_out[t][-1]
+                t += 1
+
     return dummy_out
