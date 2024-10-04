@@ -104,7 +104,7 @@ if __name__ == '__main__':
                                         L += 1
                             if cfg.EOS_TRUE:
                                 training_src_encoder_1[L] = cfg.EOS
-                            L += 1
+                                L += 1
         training_tgt_decoder_1 = training_src_encoder_1.copy().astype(np.int64)
         training_src_encoder_1 = training_src_encoder_1.reshape(cfg.BATCH, cfg.MAX_SEQ_LENGTH)
         training_tgt_notes = np.roll(training_tgt_decoder_1, shift=-1)
