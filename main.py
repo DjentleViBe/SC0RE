@@ -28,6 +28,8 @@ if __name__ == '__main__':
     decoder = DecoderAPE(device, cfg.D_MODEL, cfg.VOCAB_SIZE, cfg.FFN_HIDDEN, cfg.MAX_SEQ_LENGTH,
                          cfg.NUM_HEADS, cfg.DROP_PROB, cfg.NUM_LAYERS).to(device)
     optimizer = torch.optim.AdamW(decoder.parameters(), lr = cfg.LEARNING_RATE)
+    if cfg.SCHEDULER == 1:
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size = cfg.SCHEDULER_SIZE, gamma=0.1)
     embedding_layer = nn.Embedding(num_embeddings = cfg.VOCAB_SIZE,
                                         embedding_dim = cfg.D_MODEL).to(device)
     pos_enc = get_positional_encoding(cfg.MAX_SEQ_LENGTH, cfg.D_MODEL).to(device)
@@ -100,8 +102,8 @@ if __name__ == '__main__':
                                         elif beat.effect.tremoloBar.type.value == 5:
                                             training_src_encoder_1[L] = cfg.TREM_BAR_5
                                         L += 1
-
-                            training_src_encoder_1[L] = cfg.EOS
+                            if cfg.EOS_TRUE:
+                                training_src_encoder_1[L] = cfg.EOS
                             L += 1
         training_tgt_decoder_1 = training_src_encoder_1.copy().astype(np.int64)
         training_src_encoder_1 = training_src_encoder_1.reshape(cfg.BATCH, cfg.MAX_SEQ_LENGTH)
@@ -147,6 +149,8 @@ if __name__ == '__main__':
             print(f"{ITERATION + 1} : {loss.item()}")
             loss.backward()
             optimizer.step()
+            if cfg.SCHEDULER == 1:
+                scheduler.step()
 
             ITERATION += 1
             lossplot.append(loss.item())
