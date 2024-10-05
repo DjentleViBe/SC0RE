@@ -187,6 +187,7 @@ if __name__ == '__main__':
         checkpoint = torch.load('./RESULTS/'+ cfg.BACKUP + "/" + cfg.BACKUP +'.pth')
         decoder.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        embedding_layer.load_state_dict(checkpoint['embedding_state_dict'])
         print(f"Loss : ', {checkpoint['loss'].item()}")
         print(f"Epochs : ', {checkpoint['epoch']}")
         decoder.eval()
