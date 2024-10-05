@@ -6,7 +6,7 @@ import guitarpro as gp
 import math
 from config import (BACKUP, MAX_SEQ_LENGTH, EOS, BOS, BARRE_NOTE, MEASURE, BEND_NOTE_1, BEND_NOTE_2, BEND_NOTE_3,
 BEND_NOTE_4, BEND_NOTE_5, BEND_NOTE_6, BEND_NOTE_7, TREM_BAR_1, TREM_BAR_2, TREM_BAR_3,
-TREM_BAR_4, TREM_BAR_5, DEAD_NOTE, TEMPERATURE)
+TREM_BAR_4, TREM_BAR_5, DEAD_NOTE, TEMPERATURE, TEST_CRITERIA)
 
 DEMAPPING_BEAT_DETYPE = {
     'Base---------------' : 1,
@@ -38,19 +38,51 @@ def plot(lossplot, filename):
 
 def decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask, seq_lim):
     """Transformer Decoder"""
-    for e_val in range (2, seq_lim):
-        embeddings = embedding_layer(dummy_in)
-        output_eval = decoder(embeddings + pos_enc, mask)
+    if TEST_CRITERIA != 4:
+        for e_val in range (2, seq_lim):
+            embeddings = embedding_layer(dummy_in)
+            output_eval = decoder(embeddings + pos_enc, mask)
 
-        next_token_logits = output_eval[:, -1, :]
-        scaled_logits = next_token_logits / TEMPERATURE
-        probabilities = F.softmax(scaled_logits, dim=-1)
+            next_token_logits = output_eval[:, -1, :]
+            scaled_logits = next_token_logits / TEMPERATURE
+            probabilities = F.softmax(scaled_logits, dim=-1)
 
-        # Select the next token (using greedy search here)
-        next_token = torch.argmax(probabilities, dim=-1).unsqueeze(0)
+            # Select the next token (using greedy search here)
+            next_token = torch.argmax(probabilities, dim=-1).unsqueeze(0)
 
-        # generated_sequence = dummy_in
-        dummy_in[0][e_val] = next_token
+            # generated_sequence = dummy_in
+            dummy_in[0][e_val] = next_token
+    else:
+        e_val = 2
+        trial = 0
+        temperature_var = TEMPERATURE
+        while e_val < seq_lim:
+            embeddings = embedding_layer(dummy_in)
+            output_eval = decoder(embeddings + pos_enc, mask)
+
+            next_token_logits = output_eval[:, -1, :]
+            scaled_logits = next_token_logits / temperature_var
+            probabilities = F.softmax(scaled_logits, dim=-1)
+
+            # Select the next token (using greedy search here)
+            next_token = torch.argmax(probabilities, dim=-1).unsqueeze(0)
+
+            if e_val != 2:
+                if next_token > BOS and dummy_in[0][e_val - 1] < BOS:
+                    dummy_in[0][e_val] = next_token
+                    e_val +=1
+                elif next_token < BOS:
+                    dummy_in[0][e_val] = next_token
+                    e_val +=1
+                else:
+                    temperature_var /= 2
+                    print("Trial -->", e_val, trial, next_token.cpu()[0][0], dummy_in.cpu()[0][e_val - 1])
+                    trial += 1
+            else:
+                # generated_sequence = dummy_in
+                dummy_in[0][e_val] = next_token
+                e_val += 1
+
     print(dummy_in)
     return dummy_in
 

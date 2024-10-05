@@ -38,7 +38,7 @@ def inference(device, decoder, embedding_layer, pos_enc, mask):
                 print("0 detected")
             else:
                 t += 1
-    elif cfg.TEST_CRITERIA == 3:
+    elif cfg.TEST_CRITERIA == 3 or cfg.TEST_CRITERIA == 4:
         dummy_out = np.zeros((cfg.TEST_TRIES, cfg.MAX_SEQ_LENGTH), dtype = 'int32')
         t = 0
         while t < cfg.TEST_TRIES:
