@@ -1,13 +1,22 @@
 """Defines parameters required for training and inference"""
 
 ################################ transformers #################################
-MODE            =   0  # 0: train, # 1 : eval, # 2 : both # 3 : load from
+# 0: train, 
+# 1 : eval
+# 2 : both 
+# 3 : load from file
+MODE            =   0
 BACKUP          =   "dec_only_notes_3_Mac"
 SAVE            =   "dec_only_notes_3A_Mac"
 START_ID        =   9460
 BOS_TRUE        =   1
 EOS_TRUE        =   0
 TEST_CRITERIA   =   2
+# 0 - Vanilla
+# 1 - Disregard any note > BARRE_NOTE
+# 2 - n bars of generation, n = TEST_TRIES
+# 3 - Same as above + last note of every bar is fed to firt note of next bar
+# 4 - Same as above + loop until no repeatitive notes > BOS 
 TEST_TRIES      =   10
 ########## Params ##############
 EPOCHS          =   1500
