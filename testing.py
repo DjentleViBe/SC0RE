@@ -25,7 +25,7 @@ def inference(device, decoder, embedding_layer, pos_enc, mask):
             dummy_out = decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask,
                                      cfg.MAX_SEQ_LENGTH).cpu().numpy()
             #dummy_out[0][4] = 26416
-            if np.any(dummy_out.cpu().numpy() > cfg.BEND_NOTE_1):
+            if np.any(dummy_out.cpu().numpy() > cfg.BARRE_NOTE):
                 return dummy_out.cpu().numpy()
     elif cfg.TEST_CRITERIA == 2:
         dummy_out = np.zeros((cfg.TEST_TRIES, cfg.MAX_SEQ_LENGTH), dtype = 'int32')
