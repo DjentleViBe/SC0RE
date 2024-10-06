@@ -42,13 +42,17 @@ def decoder_greedy_search(decoder, dummy_in, embedding_layer, pos_enc, mask):
 
     next_token_logits = output_eval[:, -1, :]
     scaled_logits = next_token_logits / TEMPERATURE
+    
     probabilities = F.softmax(scaled_logits, dim=-1)
+    
 
     # Select the next token (using greedy search here)
-    next_token = torch.argmax(probabilities, dim=-1).unsqueeze(0)
+    if PREDICTION_CRITERIA == 1:
+        next_token = torch.argmax(probabilities, dim=-1).unsqueeze(0)
+    elif PREDICTION_CRITERIA == 3:
+        next_token = torch.multinomial(probabilities, num_samples=1).unsqueeze(0)
 
     return next_token
-
 
 def decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask, seq_lim):
     """Transformer Decoder"""
