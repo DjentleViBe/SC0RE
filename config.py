@@ -6,9 +6,9 @@
 # 2 : both 
 # 3 : load from file
 MODE                =   1
-BACKUP              =   "dec_only_notes_26"
-SAVE                =   "dec_only_notes_26A"
-START_ID            =   9616
+BACKUP              =   "dec_only_notes_28"
+SAVE                =   "dec_only_notes_28B"
+START_ID            =   15900
 BOS_TRUE            =   1
 EOS_TRUE            =   0
 TEST_CRITERIA       =   2
@@ -17,29 +17,30 @@ TEST_CRITERIA       =   2
 # 2 - n bars of generation, n = TEST_TRIES
 # 3 - Same as above + last note of every bar is fed to firt note of next bar
 # 4 - Same as above + loop until no repeatitive notes > BOS 
-TEST_TRIES          =   5
+TEST_TRIES          =   2
 # 1 - Greedy Search
 # 2 - Beam Seaarch
-PREDICTION_CRITERIA =   1
+# 3 - Sampling
+PREDICTION_CRITERIA =   3
 ########## Params ##############
 EPOCHS          =   1500
 SAVE_EVERY      =   100
 VOCAB_SIZE      =   26421
-FFN_HIDDEN      =   2048
+FFN_HIDDEN      =   1024
 MAX_SEQ_LENGTH  =   12
-NUM_HEADS       =   12
+NUM_HEADS       =   16
 DROP_PROB       =   0.3
-NUM_LAYERS      =   12
+NUM_LAYERS      =   24
 D_MODEL         =   720
 SCHEDULER       =   0
 SCHEDULER_SIZE  =   30
 LEARNING_RATE   =   0.0001
 PATCH           =   1
 STRIDE          =   1
-TRAINING        =   ["CB_pico"]
-BATCH           =   143
+TRAINING        =   ["CB"]
+BATCH           =   880
 CONVERGENCE     =   0.0005
-TEMPERATURE     =   0.1
+TEMPERATURE     =   1.5
 
 EOS             =   26405
 BOS             =   26406
