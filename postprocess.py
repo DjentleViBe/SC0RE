@@ -6,7 +6,8 @@ import guitarpro as gp
 import math
 from config import (BACKUP, MAX_SEQ_LENGTH, EOS, BOS, BARRE_NOTE, MEASURE, BEND_NOTE_1, BEND_NOTE_2, BEND_NOTE_3,
 BEND_NOTE_4, BEND_NOTE_5, BEND_NOTE_6, BEND_NOTE_7, TREM_BAR_1, TREM_BAR_2, TREM_BAR_3,
-TREM_BAR_4, TREM_BAR_5, DEAD_NOTE, TEMPERATURE, TEST_CRITERIA, PREDICTION_CRITERIA)
+TREM_BAR_4, TREM_BAR_5, DEAD_NOTE, SLIDE_NOTE_1, SLIDE_NOTE_2, SLIDE_NOTE_3, SLIDE_NOTE_4, SLIDE_NOTE_5, SLIDE_NOTE_6,
+TEMPERATURE, TEST_CRITERIA, PREDICTION_CRITERIA)
 
 DEMAPPING_BEAT_DETYPE = {
     'Base---------------' : 1,
@@ -136,6 +137,21 @@ def makegpro(titlename, noteval, stringnum, beatval, palmval):
     bend6_beat = song_bend_6.tracks[0].measures[0].voices[0].beats[0]
     bend7_beat = song_bend_7.tracks[0].measures[0].voices[0].beats[0]
 
+    song_slide_1 = gp.parse('./gprofiles/slide_1.gp5')
+    song_slide_2 = gp.parse('./gprofiles/slide_2.gp5')
+    song_slide_3 = gp.parse('./gprofiles/slide_3.gp5')
+    song_slide_4 = gp.parse('./gprofiles/slide_4.gp5')
+    song_slide_5 = gp.parse('./gprofiles/slide_5.gp5')
+    song_slide_6 = gp.parse('./gprofiles/slide_6.gp5')
+    slide1_beat = song_slide_1.tracks[0].measures[0].voices[0].beats[0]
+    slide2_beat = song_slide_2.tracks[0].measures[0].voices[0].beats[0]
+    slide3_beat = song_slide_3.tracks[0].measures[0].voices[0].beats[0]
+    slide4_beat = song_slide_4.tracks[0].measures[0].voices[0].beats[0]
+    slide5_beat = song_slide_5.tracks[0].measures[0].voices[0].beats[0]
+    slide6_beat = song_slide_6.tracks[0].measures[0].voices[0].beats[0]
+
+    song_dead = gp.parse('./gprofiles/dead.gp5')
+    dead_beat = song_dead.tracks[0].measures[0].voices[0].beats[0]
     # Create a new Guitar Pro song
     song = gp.models.Song()
 
@@ -173,8 +189,11 @@ def makegpro(titlename, noteval, stringnum, beatval, palmval):
             if l_val != 0:
                 l_val -= 1
         elif note == DEAD_NOTE:
-            note_collect[l_val - 1].type.name == 'dead'
-            l_val += 1
+            dead_beat.notes[0].value = note_collect[l_val - 1].value
+            dead_beat.notes[0].string = note_collect[l_val - 1].string
+            dead_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+            voice.beats[l_val - 1] = dead_beat
+            continue
             # print("-----Barred Note-----")
         elif TREM_BAR_1 <= note <= TREM_BAR_5:
             beat_collect[l_val - 1].effect.isBend = True
@@ -241,6 +260,39 @@ def makegpro(titlename, noteval, stringnum, beatval, palmval):
                 bend7_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
                 voice.beats[l_val - 1] = bend7_beat
             continue
+
+        elif SLIDE_NOTE_1 <= note <= SLIDE_NOTE_6:
+            if note == SLIDE_NOTE_1:
+                slide1_beat.notes[0].value = note_collect[l_val - 1].value
+                slide1_beat.notes[0].string = note_collect[l_val - 1].string
+                slide1_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = slide1_beat
+            elif note == SLIDE_NOTE_2:
+                slide2_beat.notes[0].value = note_collect[l_val - 1].value
+                slide2_beat.notes[0].string = note_collect[l_val - 1].string
+                slide2_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = slide2_beat
+            elif note == SLIDE_NOTE_3:
+                slide3_beat.notes[0].value = note_collect[l_val - 1].value
+                slide3_beat.notes[0].string = note_collect[l_val - 1].string
+                slide3_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = slide3_beat
+            elif note == SLIDE_NOTE_4:
+                slide4_beat.notes[0].value = note_collect[l_val - 1].value
+                slide4_beat.notes[0].string = note_collect[l_val - 1].string
+                slide4_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = slide4_beat
+            elif note == SLIDE_NOTE_5:
+                slide5_beat.notes[0].value = note_collect[l_val - 1].value
+                slide5_beat.notes[0].string = note_collect[l_val - 1].string
+                slide5_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = slide5_beat
+            elif note == SLIDE_NOTE_6:
+                slide6_beat.notes[0].value = note_collect[l_val - 1].value
+                slide6_beat.notes[0].string = note_collect[l_val - 1].string
+                slide6_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+                voice.beats[l_val - 1] = slide6_beat
+            continue
         else:
             beat_collect.append(gp.Beat(voice=voice))
             voice.beats.append(beat_collect[k_val])
@@ -274,7 +326,8 @@ def makegpro(titlename, noteval, stringnum, beatval, palmval):
 
             beat_collect[k_val].notes.append(note_collect[l_val])
             k_val += 1
-            l_val += 1
+            if l_val != MAX_SEQ_LENGTH - 1:
+                l_val += 1
     
     return song
 

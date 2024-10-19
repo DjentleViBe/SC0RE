@@ -6,9 +6,9 @@
 # 2 : both 
 # 3 : load from file
 MODE                =   1
-BACKUP              =   "dec_only_notes_28"
-SAVE                =   "dec_only_notes_28B"
-START_ID            =   15900
+BACKUP              =   "dec_only_notes_32"
+SAVE                =   "dec_only_notes_32A"
+START_ID            =   9397
 BOS_TRUE            =   1
 EOS_TRUE            =   0
 TEST_CRITERIA       =   2
@@ -17,30 +17,30 @@ TEST_CRITERIA       =   2
 # 2 - n bars of generation, n = TEST_TRIES
 # 3 - Same as above + last note of every bar is fed to firt note of next bar
 # 4 - Same as above + loop until no repeatitive notes > BOS 
-TEST_TRIES          =   2
+TEST_TRIES          =   5
 # 1 - Greedy Search
 # 2 - Beam Seaarch
 # 3 - Sampling
 PREDICTION_CRITERIA =   3
 ########## Params ##############
-EPOCHS          =   1500
+EPOCHS          =   3000
 SAVE_EVERY      =   100
-VOCAB_SIZE      =   26421
-FFN_HIDDEN      =   1024
+VOCAB_SIZE      =   26427
+FFN_HIDDEN      =   2048
 MAX_SEQ_LENGTH  =   12
-NUM_HEADS       =   16
+NUM_HEADS       =   12
 DROP_PROB       =   0.3
-NUM_LAYERS      =   24
+NUM_LAYERS      =   12
 D_MODEL         =   720
 SCHEDULER       =   0
 SCHEDULER_SIZE  =   30
 LEARNING_RATE   =   0.0001
 PATCH           =   1
 STRIDE          =   1
-TRAINING        =   ["CB"]
-BATCH           =   880
+TRAINING        =   ["PerNote"]
+BATCH           =   495
 CONVERGENCE     =   0.0005
-TEMPERATURE     =   1.5
+TEMPERATURE     =   1.1
 
 EOS             =   26405
 BOS             =   26406
@@ -58,5 +58,12 @@ TREM_BAR_3      =   26417
 TREM_BAR_4      =   26418
 TREM_BAR_5      =   26419
 DEAD_NOTE       =   26420
+SLIDE_NOTE_1    =   26421
+SLIDE_NOTE_2    =   26422
+SLIDE_NOTE_3    =   26423
+SLIDE_NOTE_4    =   26424
+SLIDE_NOTE_5    =   26425
+SLIDE_NOTE_6    =   26426
+
 #################################################################################
 MEASURE         =   8

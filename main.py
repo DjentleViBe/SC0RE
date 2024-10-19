@@ -88,7 +88,8 @@ if __name__ == '__main__':
                                         L += 1
                                     
                                     if note.type.name == 'dead':
-                                        training_src_encoder_1[L - 1] = cfg.DEAD_NOTE
+                                        training_src_encoder_1[L] = cfg.DEAD_NOTE
+                                        L += 1
 
                                     if beat.effect.isTremoloBar is True:
                                         if beat.effect.tremoloBar.type.value == 1:
@@ -102,6 +103,22 @@ if __name__ == '__main__':
                                         elif beat.effect.tremoloBar.type.value == 5:
                                             training_src_encoder_1[L] = cfg.TREM_BAR_5
                                         L += 1
+
+                                    if note.effect.slides:
+                                        if note.effect.slides[0].name == 'legatoSlideTo':
+                                            training_src_encoder_1[L] = cfg.SLIDE_NOTE_1
+                                        elif note.effect.slides[0].name == 'shiftSlideTo':
+                                            training_src_encoder_1[L] = cfg.SLIDE_NOTE_2
+                                        elif note.effect.slides[0].name == 'intoFromBelow':
+                                            training_src_encoder_1[L] = cfg.SLIDE_NOTE_3
+                                        elif note.effect.slides[0].name == 'intoFromAbove':
+                                            training_src_encoder_1[L] = cfg.SLIDE_NOTE_4
+                                        elif note.effect.slides[0].name == 'outDownwards':
+                                            training_src_encoder_1[L] = cfg.SLIDE_NOTE_5
+                                        elif note.effect.slides[0].name == 'outUpwards':
+                                            training_src_encoder_1[L] = cfg.SLIDE_NOTE_6
+                                        L += 1
+                                    
                             if cfg.EOS_TRUE:
                                 training_src_encoder_1[L] = cfg.EOS
                                 L += 1
@@ -227,5 +244,6 @@ if __name__ == '__main__':
             song_collect.append(makegpro(cfg.SAVE, noteval, stringnum, beatval, palmval))
             song.tracks[0].measures.append(song_collect[m].tracks[0].measures[0])
             m += 1
+            print("")
         writegpro(cfg.SAVE, song)
     print("Finished")
