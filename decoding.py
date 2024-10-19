@@ -1,5 +1,5 @@
 """Decoding results"""
-from config import EOS, BOS, BARRE_NOTE, BEND_NOTE_1, BEND_NOTE_7, TREM_BAR_1, TREM_BAR_5, DEAD_NOTE
+from config import EOS, BOS, BARRE_NOTE, BEND_NOTE_1, BEND_NOTE_7, TREM_BAR_1, TREM_BAR_5, DEAD_NOTE, SLIDE_NOTE_1, SLIDE_NOTE_6
 
 DEMAPPING_BEAT_TYPE = {
     1:   'Base---------------',
@@ -21,23 +21,23 @@ DEMAPPING_BEAT_TYPE = {
 def demapping_beat(beat):
     """returns beat type"""
     beat_type = ''
-    if beat >= 69:
-        beat_type += DEMAPPING_BEAT_TYPE.get(beat - 68)
+    if beat >= 71:
+        beat_type += DEMAPPING_BEAT_TYPE.get(beat - 70)
         return beat_type
-    elif 69 >= beat >= 55:
-        beat_type += DEMAPPING_BEAT_TYPE.get(beat - 54)
+    elif 71 > beat >= 57:
+        beat_type += DEMAPPING_BEAT_TYPE.get(beat - 56)
         return beat_type
-    elif 55 >= beat >= 41:
-        beat_type += DEMAPPING_BEAT_TYPE.get(beat - 40)
+    elif 57 > beat >= 43:
+        beat_type += DEMAPPING_BEAT_TYPE.get(beat - 42)
         return beat_type
-    elif 41 >= beat >= 29:
+    elif 43 > beat >= 29:
         beat_type += DEMAPPING_BEAT_TYPE.get(beat - 28)
         return beat_type
-    elif 29 >= beat >= 15:
+    elif 29 > beat >= 15:
         beat_type += DEMAPPING_BEAT_TYPE.get(beat - 14)
         return beat_type
     else:
-        beat_type += DEMAPPING_BEAT_TYPE.get(beat)
+        beat_type += DEMAPPING_BEAT_TYPE.get(beat + 1)
         return beat_type
 
 def detokenizer_1(dummy):
@@ -60,6 +60,9 @@ def detokenizer_1(dummy):
         note_val = dummy
     elif TREM_BAR_5 >= dummy >= TREM_BAR_1:
         print("-------Accent_Trem----------")
+        note_val = dummy
+    elif SLIDE_NOTE_6 >= dummy >= SLIDE_NOTE_1:
+        print("-------Accent_Slide----------")
         note_val = dummy
     elif dummy == DEAD_NOTE:
         print("-------Dead note----------")
