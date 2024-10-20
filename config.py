@@ -6,8 +6,8 @@
 # 2 : both 
 # 3 : load from file
 MODE                =   1
-BACKUP              =   "dec_only_notes_32"
-SAVE                =   "dec_only_notes_32A"
+BACKUP              =   "dec_only_notes_33"
+SAVE                =   "dec_only_notes_33B"
 START_ID            =   9397
 BOS_TRUE            =   1
 EOS_TRUE            =   0
@@ -17,7 +17,7 @@ TEST_CRITERIA       =   2
 # 2 - n bars of generation, n = TEST_TRIES
 # 3 - Same as above + last note of every bar is fed to firt note of next bar
 # 4 - Same as above + loop until no repeatitive notes > BOS 
-TEST_TRIES          =   5
+TEST_TRIES          =   10
 # 1 - Greedy Search
 # 2 - Beam Seaarch
 # 3 - Sampling
@@ -25,20 +25,20 @@ PREDICTION_CRITERIA =   3
 ########## Params ##############
 EPOCHS          =   3000
 SAVE_EVERY      =   100
-VOCAB_SIZE      =   26427
+VOCAB_SIZE      =   26430
 FFN_HIDDEN      =   2048
 MAX_SEQ_LENGTH  =   12
 NUM_HEADS       =   12
 DROP_PROB       =   0.3
 NUM_LAYERS      =   12
-D_MODEL         =   720
+D_MODEL         =   840
 SCHEDULER       =   0
 SCHEDULER_SIZE  =   30
-LEARNING_RATE   =   0.0001
+LEARNING_RATE   =   0.00005
 PATCH           =   1
 STRIDE          =   1
 TRAINING        =   ["PerNote"]
-BATCH           =   495
+BATCH           =   499
 CONVERGENCE     =   0.0005
 TEMPERATURE     =   1.1
 
@@ -64,6 +64,9 @@ SLIDE_NOTE_3    =   26423
 SLIDE_NOTE_4    =   26424
 SLIDE_NOTE_5    =   26425
 SLIDE_NOTE_6    =   26426
+HAMMER          =   26427
+VIBRATO         =   26428
+HARMONIC_1      =   26429
 
 #################################################################################
 MEASURE         =   8

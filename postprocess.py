@@ -7,6 +7,7 @@ import math
 from config import (BACKUP, MAX_SEQ_LENGTH, EOS, BOS, BARRE_NOTE, MEASURE, BEND_NOTE_1, BEND_NOTE_2, BEND_NOTE_3,
 BEND_NOTE_4, BEND_NOTE_5, BEND_NOTE_6, BEND_NOTE_7, TREM_BAR_1, TREM_BAR_2, TREM_BAR_3,
 TREM_BAR_4, TREM_BAR_5, DEAD_NOTE, SLIDE_NOTE_1, SLIDE_NOTE_2, SLIDE_NOTE_3, SLIDE_NOTE_4, SLIDE_NOTE_5, SLIDE_NOTE_6,
+HAMMER, VIBRATO, HARMONIC_1, 
 TEMPERATURE, TEST_CRITERIA, PREDICTION_CRITERIA)
 
 DEMAPPING_BEAT_DETYPE = {
@@ -152,6 +153,15 @@ def makegpro(titlename, noteval, stringnum, beatval, palmval):
 
     song_dead = gp.parse('./gprofiles/dead.gp5')
     dead_beat = song_dead.tracks[0].measures[0].voices[0].beats[0]
+
+    song_hammer = gp.parse('./gprofiles/hammer.gp5')
+    hammer_beat = song_hammer.tracks[0].measures[0].voices[0].beats[0]
+
+    song_vibrato = gp.parse('./gprofiles/vibrato.gp5')
+    vibrato_beat = song_vibrato.tracks[0].measures[0].voices[0].beats[0]
+
+    song_harmonic_1 = gp.parse('./gprofiles/harmonic_1.gp5')
+    harmonic_1_beat = song_harmonic_1.tracks[0].measures[0].voices[0].beats[0]
     # Create a new Guitar Pro song
     song = gp.models.Song()
 
@@ -193,6 +203,24 @@ def makegpro(titlename, noteval, stringnum, beatval, palmval):
             dead_beat.notes[0].string = note_collect[l_val - 1].string
             dead_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
             voice.beats[l_val - 1] = dead_beat
+            continue
+        elif note == HAMMER:
+            hammer_beat.notes[0].value = note_collect[l_val - 1].value
+            hammer_beat.notes[0].string = note_collect[l_val - 1].string
+            hammer_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+            voice.beats[l_val - 1] = hammer_beat
+            continue
+        elif note == VIBRATO:
+            vibrato_beat.notes[0].value = note_collect[l_val - 1].value
+            vibrato_beat.notes[0].string = note_collect[l_val - 1].string
+            vibrato_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+            voice.beats[l_val - 1] = vibrato_beat
+            continue
+        elif note == HARMONIC_1:
+            harmonic_1_beat.notes[0].value = note_collect[l_val - 1].value
+            harmonic_1_beat.notes[0].string = note_collect[l_val - 1].string
+            harmonic_1_beat.notes[0].beat.duration.value = beat_collect[k_val - 1].duration.value
+            voice.beats[l_val - 1] = harmonic_1_beat
             continue
             # print("-----Barred Note-----")
         elif TREM_BAR_1 <= note <= TREM_BAR_5:

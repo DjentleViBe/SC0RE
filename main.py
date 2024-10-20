@@ -119,6 +119,18 @@ if __name__ == '__main__':
                                             training_src_encoder_1[L] = cfg.SLIDE_NOTE_6
                                         L += 1
                                     
+                                    if note.effect.hammer == True:
+                                        training_src_encoder_1[L] = cfg.HAMMER
+                                        L += 1
+
+                                    if note.effect.vibrato == True:
+                                        training_src_encoder_1[L] = cfg.VIBRATO
+                                        L += 1
+
+                                    if note.effect.isHarmonic == True:
+                                        training_src_encoder_1[L] = cfg.HARMONIC_1
+                                        L += 1
+                                                        
                             if cfg.EOS_TRUE:
                                 training_src_encoder_1[L] = cfg.EOS
                                 L += 1

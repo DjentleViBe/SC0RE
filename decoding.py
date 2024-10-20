@@ -1,5 +1,7 @@
 """Decoding results"""
-from config import EOS, BOS, BARRE_NOTE, BEND_NOTE_1, BEND_NOTE_7, TREM_BAR_1, TREM_BAR_5, DEAD_NOTE, SLIDE_NOTE_1, SLIDE_NOTE_6
+from config import EOS, BOS, BARRE_NOTE, BEND_NOTE_1, BEND_NOTE_7, \
+                    TREM_BAR_1, TREM_BAR_5, DEAD_NOTE, SLIDE_NOTE_1, SLIDE_NOTE_6, \
+                    HAMMER, VIBRATO, HARMONIC_1
 
 DEMAPPING_BEAT_TYPE = {
     1:   'Base---------------',
@@ -66,6 +68,15 @@ def detokenizer_1(dummy):
         note_val = dummy
     elif dummy == DEAD_NOTE:
         print("-------Dead note----------")
+        note_val = dummy
+    elif dummy == HAMMER:
+        print("-------Hammer----------")
+        note_val = dummy
+    elif dummy == VIBRATO:
+        print("-------Vibrato----------")
+        note_val = dummy
+    elif dummy == HARMONIC_1:
+        print("-------Harmonic----------")
         note_val = dummy
     else:
         palm_mute = False
