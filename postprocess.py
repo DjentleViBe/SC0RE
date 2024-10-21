@@ -91,7 +91,7 @@ def decoder_inference(decoder, dummy_in, embedding_layer, pos_enc, mask, seq_lim
 
 def getnotetype(notetype):
     """Return note type"""
-    if 1 <= notetype <= 14:
+    if 0 <= notetype <= 14:
         return 32, notetype
     elif 15 <= notetype <= 28:
         return 16, notetype - 14
